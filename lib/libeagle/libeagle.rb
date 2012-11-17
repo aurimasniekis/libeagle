@@ -1,10 +1,11 @@
 require_relative "eagle"
 require 'yaml'
+require 'nokogiri'
 raise "LibEagle requires Ruby >= 1.8.6" if RUBY_VERSION < "1.8.6"
 
 module LibEagle
-  class << self
-    def parse(file)
+  class Parser
+    def self.parse(file)
       xml = Nokogiri::XML(IO.read(file))
       root = xml.xpath('//eagle').first
       eagle = Eagle.new(root)
@@ -14,4 +15,4 @@ module LibEagle
   
 end
 
-puts LibEagle::parse('/Users/gcds/Projects/Ruby/test.xml').to_yaml
+puts LibEagle::Parser.parse('/Users/gcds/Projects/Ruby/test.xml').to_yaml
