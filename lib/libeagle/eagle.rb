@@ -93,8 +93,8 @@
       end
 
       if xml.xpath('symbols/symbol').size > 0
-        symbols = xml.xpath('symbols')
-        #@symbols = Symbols.new(symbols)
+        symbols = xml.xpath('symbols/symbol')
+        @symbols = Symbols.new(symbols)
       end
 
       if xml.xpath('devicesets/deviceset').size > 0
@@ -396,7 +396,6 @@
           @frame << Frame.new(frame)
         end
       end
-
     end
   end
 
@@ -717,4 +716,3 @@
       @curve = xml['curve']
     end
   end
-  
