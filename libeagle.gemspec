@@ -2,11 +2,11 @@
 require File.expand_path('../lib/libeagle/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["TODO: Write your name"]
-  gem.email         = ["TODO: Write your email address"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.authors       = ["Aurimas Niekis"]
+  gem.email         = ["aurimas.niekis@gmail.com"]
+  gem.description   = %q{CadSoft Eagle Ruby Library}
+  gem.summary       = %q{This gem provides functionality to manage CadSoft Eagle Files}
+  gem.homepage      = "http://www.gcds.lt"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
