@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 require File.expand_path('../lib/libeagle/version', __FILE__)
-
 Gem::Specification.new do |gem|
   gem.authors       = ["Aurimas Niekis"]
   gem.email         = ["aurimas.niekis@gmail.com"]

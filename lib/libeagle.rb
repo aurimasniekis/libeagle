@@ -1,5 +1,2 @@
-require "libeagle/version"
-
-module Libeagle
-  # Your code goes here...
-end
+require 'nokogiri'
+require_relative "libeagle"
