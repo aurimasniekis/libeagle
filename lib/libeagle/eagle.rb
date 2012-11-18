@@ -165,6 +165,44 @@ class Board
                 :elements,
                 :signals,
                 :errors
+
+  def initialize(xml)
+    if description = xml.xpath('description').first
+      @description = Description.new(description)
+    end
+
+    if xml.xpath('libraries/library').size > 0
+      libraries = xml.xpath('libraries/library')
+      @libraries = Libraries.new(libraries)
+    end
+    if xml.xpath('attributes/attribute').size > 0
+      attributes = xml.xpath('attributes/attribute')
+      @attributes = Attributes.new(attributes)
+    end
+    if xml.xpath('variantdefs/variantdef').size > 0
+      variantdefs = xml.xpath('variantdefs/variantdef')
+      @variantdefs = Variantdefs.new(variantdefs)
+    end
+    if xml.xpath('classes/class').size > 0
+      classes = xml.xpath('classes/class')
+      @classes = Classes.new(classes)
+    end
+    if designrules = xml.xpath('designrules').first
+      @designrules = Designrules.new(designrules)
+    end
+    if xml.xpath('autorouter/pass').size > 0
+      autorouter = xml.xpath('autorouter/pass')
+      @autorouter = Autorouter.new(autorouter)
+    end
+    if xml.xpath('elements/element').size > 0
+      elements = xml.xpath('elements/element')
+      @elements = Elements.new(elements)
+    end
+    if xml.xpath('errors/approved').size > 0
+      errors = xml.xpath('errors/approved')
+      @errors = Errors.new(errors)
+    end
+  end
 end
 
 #
@@ -1335,7 +1373,7 @@ class Signals
   def initialize(xml)
     @signals = []
     xml.each do |s|
-      @signals << Signal.new(s)
+      @signals << SSignal.new(s)
     end
   end
 end
