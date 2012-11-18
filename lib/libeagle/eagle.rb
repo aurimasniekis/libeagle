@@ -26,8 +26,8 @@ class Compatibility
   def initialize(xml)
     @note = Note.new
     @note.note = xml.content
-    @note.version = xml['version']
-    @note.severity = xml['severity']
+    @version = xml['version'] if xml['version']
+    @severity = xml['severity'] if xml['severity']
   end
 end
 
@@ -81,7 +81,7 @@ class Library
                 :name
 
   def initialize(xml)
-    @name = xml['name']
+    @name = xml['name'] if xml['name']
     if description = xml.xpath('description').first
       @description = Description.new(description)
     end
@@ -148,8 +148,8 @@ class Schematic
       errors = xml.xpath('errors/error')
       @errors = Errors.new(errors)
     end
-    @xreflabel = xml['xreflabel']
-    @xrefpart = xml['xrefpart']
+    @xreflabel = xml['xreflabel'] if xml['xreflabel']
+    @xrefpart = xml['xrefpart'] if xml['xrefpart']
   end
 end
 
@@ -258,7 +258,7 @@ class Package
                 :name
 
   def initialize(xml)
-    @name = xml['name']
+    @name = xml['name'] if xml['name']
     if description = xml.xpath('description').first
       @description = Description.new(description)
     end
@@ -339,7 +339,7 @@ class SSymbol
                 :name
 
   def initialize(xml)
-    @name = xml['name']
+    @name = xml['name'] if xml['name']
     if description = xml.xpath('description').first
       @description = Description.new(description)
     end
@@ -403,9 +403,9 @@ class Deviceset
                 :uservalue
 
   def initialize(xml)
-    @name = xml['name']
-    @prefix = xml['prefix']
-    @uservalue = xml['uservalue']
+    @name = xml['name'] if xml['name']
+    @prefix = xml['prefix'] if xml['prefix']
+    @uservalue = xml['uservalue'] if xml['uservalue']
 
     if description = xml.xpath('description').first
       @description = Description.new(description)
@@ -441,8 +441,8 @@ class Device
       @technologies = Technologies.new(technologies)
     end
 
-    @name = xml['name']
-    @package = xml['package']
+    @name = xml['name'] if xml['name']
+    @package = xml['package'] if xml['package']
   end
 end
 
@@ -457,7 +457,7 @@ class Bus
         @segment << Segment.new(segment)
       end
     end
-    @name = xml['name']
+    @name = xml['name'] if xml['name']
   end
 end
 
@@ -473,7 +473,7 @@ class Net
         @segment << Segment.new(segment)
       end
     end
-    @name = xml['name']
+    @name = xml['name'] if xml['name']
     @cclass = xml['cclass']  
   end
 end
@@ -521,9 +521,9 @@ class SSignal
                 :wire,
                 :via
   def initialize(xml)
-    @name = xml['name']
-    @cclass = xml['cclass']
-    @airwireshidden = xml['airwireshidden']
+    @name = xml['name'] if xml['name']
+    @cclass = xml['cclass'] if xml['cclass']
+    @airwireshidden = xml['airwireshidden'] if xml['airwireshidden']
     if xml.xpath('contactref').size > 0
       @contactref = []
       xml.xpath('contactref').each do |contactref|
@@ -559,8 +559,8 @@ class Variantdef
                 :current
 
   def initialize(xml)
-    @name = xml['name']
-    @current = xml['current']
+    @name = xml['name'] if xml['name']
+    @current = xml['current'] if xml['current']
   end
 end
 
@@ -571,10 +571,10 @@ class Variant
                 :technology
 
   def initialize(xml)
-    @name = xml['name']
-    @populate = xml['populate']
-    @value = xml['value']
-    @technology = xml['technology']
+    @name = xml['name'] if xml['name']
+    @populate = xml['populate'] if xml['populate']
+    @value = xml['value'] if xml['value']
+    @technology = xml['technology'] if xml['technology']
   end
 end
 
@@ -587,12 +587,12 @@ class Gate
                 :swaplevel
   
   def initialize(xml)
-    @name = xml['name']
-    @symbol = xml['symbol']
-    @x = xml['x']
-    @y = xml['y']
-    @addlevel = xml['addlevel']
-    @swaplevel = xml['swaplevel']
+    @name = xml['name'] if xml['name']
+    @symbol = xml['symbol'] if xml['symbol']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @addlevel = xml['addlevel'] if xml['addlevel']
+    @swaplevel = xml['swaplevel'] if xml['swaplevel']
   end              
 end
 
@@ -609,16 +609,16 @@ class Wire
                 :cap
 
   def initialize(xml)
-    @x1 = xml['x1']
-    @y1 = xml['y1']
-    @x2 = xml['x2']
-    @y2 = xml['y2']
-    @width = xml['width']
-    @layer = xml['layer']
-    @extent = xml['extent']
-    @style = xml['style']
-    @curve = xml['curve']
-    @cap = xml['cap']
+    @x1 = xml['x1'] if xml['x1']
+    @y1 = xml['y1'] if xml['y1']
+    @x2 = xml['x2'] if xml['x2']
+    @y2 = xml['y2'] if xml['y2']
+    @width = xml['width'] if xml['width']
+    @layer = xml['layer'] if xml['layer']
+    @extent = xml['extent'] if xml['extent']
+    @style = xml['style'] if xml['style']
+    @curve = xml['curve'] if xml['curve']
+    @cap = xml['cap'] if xml['cap']
   end
 end
 
@@ -632,14 +632,14 @@ class Dimension
                 :layer,
                 :dtype
   def initialize(xml)
-    @x1 = xml['x1']
-    @y2 = xml['y2']
-    @x2 = xml['x2']
-    @y2 = xml['y2']
-    @x3 = xml['x3']
-    @y3 = xml['y3']
-    @layer = xml['layer']
-    @dtype = xml['dtype']
+    @x1 = xml['x1'] if xml['x1']
+    @y2 = xml['y2'] if xml['y2']
+    @x2 = xml['x2'] if xml['x2']
+    @y2 = xml['y2'] if xml['y2']
+    @x3 = xml['x3'] if xml['x3']
+    @y3 = xml['y3'] if xml['y3']
+    @layer = xml['layer'] if xml['layer']
+    @dtype = xml['dtype'] if xml['dtype']
   end
 end
 
@@ -656,15 +656,15 @@ class Text
                 :text
 
   def initialize(xml)
-    @x = xml['x']
-    @y = xml['y']
-    @size = xml['size']
-    @layer = xml['layer']
-    @font = xml['font']
-    @ratio = xml['ratio']
-    @rot = xml['rot']
-    @align = xml['align']
-    @distance = xml['distance']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @size = xml['size'] if xml['size']
+    @layer = xml['layer'] if xml['layer']
+    @font = xml['font'] if xml['font']
+    @ratio = xml['ratio'] if xml['ratio']
+    @rot = xml['rot'] if xml['rot']
+    @align = xml['align'] if xml['align']
+    @distance = xml['distance'] if xml['distance']
     @text = xml.content
   end
 end
@@ -677,11 +677,11 @@ class Circle
                 :layer
 
   def initialize(xml)
-    @x = xml['x']
-    @y = xml['y']
-    @radius = xml['radius']
-    @width = xml['width']
-    @layer = xml['layer']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @radius = xml['radius'] if xml['radius']
+    @width = xml['width'] if xml['width']
+    @layer = xml['layer'] if xml['layer']
   end
 end
 
@@ -694,12 +694,12 @@ class Rectangle
                 :rot
 
   def initialize(xml)
-    @x1 = xml['x1']
-    @y1 = xml['y1']
-    @x2 = xml['x2']
-    @y2 = xml['y2']
-    @layer = xml['layer']
-    @rot = xml['rot']
+    @x1 = xml['x1'] if xml['x1']
+    @y1 = xml['y1'] if xml['y1']
+    @x2 = xml['x2'] if xml['x2']
+    @y2 = xml['y2'] if xml['y2']
+    @layer = xml['layer'] if xml['layer']
+    @rot = xml['rot'] if xml['rot']
   end
 end
 
@@ -717,17 +717,17 @@ class Frame
                 :border_bottom
 
   def initialize(xml)
-    @x1 = xml['x1']
-    @y2 = xml['y2']
-    @x2 = xml['x2']
-    @y2 = xml['y2']
-    @columns = xml['columns']
-    @rows = xml['rows']
-    @layer = xml['layer']
-    @border_left = xml['border_left']
-    @border_top = xml['border_top']
-    @border_right = xml['border_right']
-    @border_bottom = xml['border_bottom']
+    @x1 = xml['x1'] if xml['x1']
+    @y2 = xml['y2'] if xml['y2']
+    @x2 = xml['x2'] if xml['x2']
+    @y2 = xml['y2'] if xml['y2']
+    @columns = xml['columns'] if xml['columns']
+    @rows = xml['rows'] if xml['rows']
+    @layer = xml['layer'] if xml['layer']
+    @border_left = xml['border_left'] if xml['border_left']
+    @border_top = xml['border_top'] if xml['border_top']
+    @border_right = xml['border_right'] if xml['border_right']
+    @border_bottom = xml['border_bottom'] if xml['border_bottom']
   end
 end
 
@@ -737,9 +737,9 @@ class Hole
                 :drill
 
   def initialize(xml)
-    @x = xml['x']
-    @y = xml['y']
-    @drill = xml['drill']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @drill = xml['drill'] if xml['drill']
   end
 end       
 
@@ -757,16 +757,16 @@ class Pad
                 :first
 
   def initialize(xml)
-    @name = xml['name']
-    @x = xml['x']
-    @y = xml['y']
-    @drill = xml['drill']
-    @diameter = xml['diameter']
-    @shape = xml['shape']
-    @rot = xml['rot']
-    @stop = xml['stop']
-    @thermals = xml['thermals']
-    @first = xml['first']
+    @name = xml['name'] if xml['name']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @drill = xml['drill'] if xml['drill']
+    @diameter = xml['diameter'] if xml['diameter']
+    @shape = xml['shape'] if xml['shape']
+    @rot = xml['rot'] if xml['rot']
+    @stop = xml['stop'] if xml['stop']
+    @thermals = xml['thermals'] if xml['thermals']
+    @first = xml['first'] if xml['first']
   end
 end
 
@@ -784,17 +784,17 @@ class Smd
                 :cream
 
   def initialize(xml)
-    @name = xml['name']
-    @x = xml['x']
-    @y = xml['y']
-    @dx = xml['dx']
-    @dy = xml['dy']
-    @layer = xml['layer']
-    @roundness = xml['roundness']
-    @rot = xml['rot']
-    @stop = xml['stop']
-    @thermals = xml['thermals']
-    @cream = xml['cream']
+    @name = xml['name'] if xml['name']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @dx = xml['dx'] if xml['dx']
+    @dy = xml['dy'] if xml['dy']
+    @layer = xml['layer'] if xml['layer']
+    @roundness = xml['roundness'] if xml['roundness']
+    @rot = xml['rot'] if xml['rot']
+    @stop = xml['stop'] if xml['stop']
+    @thermals = xml['thermals'] if xml['thermals']
+    @cream = xml['cream'] if xml['cream']
   end
 end
 
@@ -824,15 +824,15 @@ class Element
         @variant << Variant.new(variant)
       end
     end
-    @name = xml['name']
-    @library = xml['library']
-    @package = xml['package']
-    @value = xml['value']
-    @x = xml['x']
-    @y = xml['y']
-    @locked = xml['locked']
-    @smashed = xml['smashed']
-    @rot = xml['rot']
+    @name = xml['name'] if xml['name']
+    @library = xml['library'] if xml['library']
+    @package = xml['package'] if xml['package']
+    @value = xml['value'] if xml['value']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @locked = xml['locked'] if xml['locked']
+    @smashed = xml['smashed'] if xml['smashed']
+    @rot = xml['rot'] if xml['rot']
   end
 end
 
@@ -846,13 +846,13 @@ class Via
                 :alwaysstop
 
   def initialize(xml)
-    @x = xml['x']
-    @y = xml['y']
-    @extent = xml['extent']
-    @drill = xml['drill']
-    @diameter = xml['diameter']
-    @shape = xml['shape']
-    @alwaysstop = xml['alwaysstop']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @extent = xml['extent'] if xml['extent']
+    @drill = xml['drill'] if xml['drill']
+    @diameter = xml['diameter'] if xml['diameter']
+    @shape = xml['shape'] if xml['shape']
+    @alwaysstop = xml['alwaysstop'] if xml['alwaysstop']
   end
 end
 
@@ -875,14 +875,14 @@ class Polygon
       end
     end
 
-    @width = xml['width']
-    @layer = xml['layer']
-    @spacing = xml['spacing']
-    @pour = xml['pour']
-    @isolate = xml['isolate']
-    @orphans = xml['orphans']
-    @thermals = xml['thermals']
-    @rank = xml['rank']
+    @width = xml['width'] if xml['width']
+    @layer = xml['layer'] if xml['layer']
+    @spacing = xml['spacing'] if xml['spacing']
+    @pour = xml['pour'] if xml['pour']
+    @isolate = xml['isolate'] if xml['isolate']
+    @orphans = xml['orphans'] if xml['orphans']
+    @thermals = xml['thermals'] if xml['thermals']
+    @rank = xml['rank'] if xml['rank']
   end
 end
 
@@ -892,9 +892,9 @@ class Vertex
                 :curve
 
   def initialize(xml)
-    @x = xml['x']
-    @y = xml['y']
-    @curve = xml['curve']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @curve = xml['curve'] if xml['curve']
   end
 end
 
@@ -910,15 +910,15 @@ class Pin
                 :rot
 
   def initialize(xml)
-    @name = xml['name']
-    @x = xml['x']
-    @y = xml['y']
-    @visible = xml['visible']
-    @length = xml['length']
-    @direction = xml['direction']
-    @function = xml['function']
-    @swaplevel = xml['swaplevel']
-    @rot = xml['rot']
+    @name = xml['name'] if xml['name']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @visible = xml['visible'] if xml['visible']
+    @length = xml['length'] if xml['length']
+    @direction = xml['direction'] if xml['direction']
+    @function = xml['function'] if xml['function']
+    @swaplevel = xml['swaplevel'] if xml['swaplevel']
+    @rot = xml['rot'] if xml['rot']
   end
 end
 
@@ -945,12 +945,12 @@ class Part
         @variant << Variant.new(variant)
       end
     end
-    @name = xml['name']
-    @library = xml['library']
-    @deviceset = xml['deviceset']
-    @device = xml['device']
-    @technology = xml['technology']
-    @value = xml['value']
+    @name = xml['name'] if xml['name']
+    @library = xml['library'] if xml['library']
+    @deviceset = xml['deviceset'] if xml['deviceset']
+    @device = xml['device'] if xml['device']
+    @technology = xml['technology'] if xml['technology']
+    @value = xml['value'] if xml['value']
   end
 end
 
@@ -970,12 +970,12 @@ class Instance
         @attribute << Attribute.new(attribute)
       end
     end
-    @part = xml['part']
-    @gate = xml['gate']
-    @x = xml['x']
-    @y = xml['y']
-    @smashed = xml['smashed']
-    @rot = xml['rot']
+    @part = xml['part'] if xml['part']
+    @gate = xml['gate'] if xml['gate']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @smashed = xml['smashed'] if xml['smashed']
+    @rot = xml['rot'] if xml['rot']
   end
 end
 
@@ -990,14 +990,14 @@ class Label
                 :xref
 
   def initialize(xml)
-    @x = xml['x']
-    @y = xml['y']
-    @size = xml['size']
-    @layer = xml['layer']
-    @font = xml['font']
-    @ratio = xml['ratio']
-    @rot = xml['rot']
-    @xref = xml['xref']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @size = xml['size'] if xml['size']
+    @layer = xml['layer'] if xml['layer']
+    @font = xml['font'] if xml['font']
+    @ratio = xml['ratio'] if xml['ratio']
+    @rot = xml['rot'] if xml['rot']
+    @xref = xml['xref'] if xml['xref']
   end
 end
 
@@ -1006,8 +1006,8 @@ class Junction
                 :y
 
   def initialize(xml)
-    @x = xml['x']
-    @y = xml['y']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
   end
 end
 
@@ -1018,10 +1018,10 @@ class Connect
                 :route
 
   def initialize(xml)
-    @gate = xml['gate']
-    @pin = xml['pin']
-    @pad = xml['pad']
-    @route = xml['route']
+    @gate = xml['gate'] if xml['gate']
+    @pin = xml['pin'] if xml['pin']
+    @pad = xml['pad'] if xml['pad']
+    @route = xml['route'] if xml['route']
   end
 end
 
@@ -1030,7 +1030,7 @@ class Technology
                 :name
 
   def initialize(xml)
-    @name = xml['name']
+    @name = xml['name'] if xml['name']
     if xml.xpath('attribute').size > 0
       @attribute = []
       xml.xpath('attribute').each do |attribute|
@@ -1054,17 +1054,17 @@ class Attribute
                 :constant
 
   def initialize(xml)
-    @name = xml['name']
-    @value = xml['value']
-    @x = xml['x']
-    @y = xml['y']
-    @size = xml['size']
-    @layer = xml['layer']
-    @font = xml['font']
-    @ratio = xml['ratio']
-    @rot = xml['rot']
-    @display = xml['display']
-    @constant = xml['constant']
+    @name = xml['name'] if xml['name']
+    @value = xml['value'] if xml['value']
+    @x = xml['x'] if xml['x']
+    @y = xml['y'] if xml['y']
+    @size = xml['size'] if xml['size']
+    @layer = xml['layer'] if xml['layer']
+    @font = xml['font'] if xml['font']
+    @ratio = xml['ratio'] if xml['ratio']
+    @rot = xml['rot'] if xml['rot']
+    @display = xml['display'] if xml['display']
+    @constant = xml['constant'] if xml['constant']
   end
 end
 
@@ -1074,9 +1074,9 @@ class Pinref
                 :pin
 
   def initialize(xml)
-    @part = xml['part']
-    @gate = xml['gate']
-    @pin = xml['pin']
+    @part = xml['part'] if xml['part']
+    @gate = xml['gate'] if xml['gate']
+    @pin = xml['pin'] if xml['pin']
   end
 end
 
@@ -1087,10 +1087,10 @@ class Contactref
                 :routetag
 
   def initialize(xml)
-    @element = xml['element']
-    @pad = xml['pad']
-    @route = xml['route']
-    @routetag = xml['routetag']
+    @element = xml['element'] if xml['element']
+    @pad = xml['pad'] if xml['pad']
+    @route = xml['route'] if xml['route']
+    @routetag = xml['routetag'] if xml['routetag']
   end
 end
 
@@ -1428,7 +1428,7 @@ class Designrules
         @param << Param.new(param)
       end
     end
-    @name = xml['name']
+    @name = xml['name'] if xml['name']
   end
 end
 
@@ -1444,15 +1444,15 @@ class Grid
                 :altunit
 
   def initialize(xml)
-    @distance = xml['distance']
-    @unitdist = xml['unitdist']
-    @unit = xml['unit']
-    @style = xml['style']
-    @multiple = xml['multiple']
-    @display = xml['display']
-    @altdistance = xml['altdistance']
-    @altunitdist = xml['altunitdist']
-    @altunit = xml['altunit']
+    @distance = xml['distance'] if xml['distance']
+    @unitdist = xml['unitdist'] if xml['unitdist']
+    @unit = xml['unit'] if xml['unit']
+    @style = xml['style'] if xml['style']
+    @multiple = xml['multiple'] if xml['multiple']
+    @display = xml['display'] if xml['display']
+    @altdistance = xml['altdistance'] if xml['altdistance']
+    @altunitdist = xml['altunitdist'] if xml['altunitdist']
+    @altunit = xml['altunit'] if xml['altunit']
   end
 end
 
@@ -1465,12 +1465,12 @@ class Layer
                 :active
   
   def initialize(xml)
-    @number = xml['number']
-    @name = xml['name']
-    @color = xml['color']
-    @fill = xml['fill']
-    @visible = xml['visible']
-    @active = xml['active']
+    @number = xml['number'] if xml['number']
+    @name = xml['name'] if xml['name']
+    @color = xml['color'] if xml['color']
+    @fill = xml['fill'] if xml['fill']
+    @visible = xml['visible'] if xml['visible']
+    @active = xml['active'] if xml['active']
   end
 end
 
@@ -1488,10 +1488,10 @@ class CClass
         @clearance << Clearance.new(clearance)
       end
     end
-    @number = xml['number']
-    @name = xml['name']
-    @width = xml['width']
-    @drill = xml['drill']
+    @number = xml['number'] if xml['number']
+    @name = xml['name'] if xml['name']
+    @width = xml['width'] if xml['width']
+    @drill = xml['drill'] if xml['drill']
   end
 end
 
@@ -1500,8 +1500,8 @@ class Clearance
                 :value
 
   def initialize(xml)
-    @cclass = xml['cclass']
-    @value = xml['value']
+    @cclass = xml['cclass'] if xml['cclass']
+    @value = xml['value'] if xml['value']
   end
 end
 
@@ -1510,7 +1510,7 @@ class Description
                 :description
 
   def initialize(xml)
-    @language = xml['language']
+    @language = xml['language'] if xml['language']
     @description = xml.content
   end
 end
@@ -1520,8 +1520,8 @@ class Param
                 :value
 
   def initialize(xml)
-    @name = xml['name']
-    @value = xml['value']
+    @name = xml['name'] if xml['name']
+    @value = xml['value'] if xml['value']
   end           
 end
 
@@ -1538,9 +1538,9 @@ class Pass
         @param << Param.new(param)
       end
     end
-    @name = xml['name']
-    @refer = xml['refer']
-    @active = xml['active']
+    @name = xml['name'] if xml['name']
+    @refer = xml['refer'] if xml['refer']
+    @active = xml['active'] if xml['active']
   end
 end
 
@@ -1548,6 +1548,6 @@ class Approved
   attr_accessor :hash
 
   def initialize(xml)
-    @hash = xml['hash']
+    @hash = xml['hash'] if xml['hash']
   end
 end
