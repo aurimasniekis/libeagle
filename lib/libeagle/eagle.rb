@@ -1,3 +1,6 @@
+  #
+  # Drawing definitions
+  #
   class Eagle
     attr_accessor :compatibility,
                   :drawing,
@@ -15,7 +18,6 @@
         end
       end
     end
-
   end
 
   class Compatibility
@@ -27,7 +29,6 @@
       @note.version = xml['version']
       @note.severity = xml['severity']
     end
-
   end
 
   class Note
@@ -72,8 +73,6 @@
     end
   end
 
-  
-
   class Library
     attr_accessor :description,
                   :packages,
@@ -101,21 +100,8 @@
         devicesets = xml.xpath('devicesets/deviceset')
         @devicesets = Devicesets.new(devicesets)
       end
-
-    end
-
-  end
-
-  class Description
-    attr_accessor :language,
-                  :description
-
-    def initialize(xml)
-      @language = xml['language']
-      @description = xml.content
     end
   end
-
 
   class Schematic
     attr_accessor :description,
@@ -144,103 +130,9 @@
                   :errors
   end
 
-  class Settings
-    attr_accessor :alwaysvectorfont,
-                  :verticaltext
-    def initialize(xml)
-      xml.each do |s|
-        @alwaysvectorfont = s['alwaysvectorfont'] if s['alwaysvectorfont']
-        @verticaltext = s['verticaltext'] if s['verticaltext']
-      end
-    end
-  end
-
-  class Layers
-    attr_accessor :layers
-
-    def initialize(xml)
-      @layers = []
-      xml.each do |l|
-        @layers << Layer.new(l)
-      end
-    end
-  end
-
-  class Layer
-    attr_accessor :number,
-                  :name,
-                  :color,
-                  :fill,
-                  :visible,
-                  :active
-    
-    def initialize(xml)
-      @number = xml['number']
-      @name = xml['name']
-      @color = xml['color']
-      @fill = xml['fill']
-      @visible = xml['visible']
-      @active = xml['active']
-    end
-  end
-
-  class Grid
-    attr_accessor :distance,
-                  :unitdist,
-                  :unit,
-                  :style,
-                  :multiple,
-                  :display,
-                  :altdistance,
-                  :altunitdist,
-                  :altunit
-
-    def initialize(xml)
-      @distance = xml['distance']
-      @unitdist = xml['unitdist']
-      @unit = xml['unit']
-      @style = xml['style']
-      @multiple = xml['multiple']
-      @display = xml['display']
-      @altdistance = xml['altdistance']
-      @altunitdist = xml['altunitdist']
-      @altunit = xml['altunit']
-    end
-  end
-
-  class Packages
-    attr_accessor :packages
-
-    def initialize(xml)
-      @packages = []
-      xml.each do |p|
-        @packages << Package.new(p)
-      end
-    end
-  end
-
-  class Symbols
-    attr_accessor :symbols
-
-    def initialize(xml)
-      @symbols = []
-      xml.each do |p|
-        @symbols << SSymbol.new(p)
-      end
-    end
-  end
-
-  class Devicesets
-    attr_accessor :devicesets
-
-    def initialize(xml)
-      @devicesets = []
-      xml.each do |p|
-        @devicesets << Deviceset.new(p)
-      end
-    end 
-  end
-
+  #
+  # High Level Objects
+  #
   class Sheet
     attr_accessor :description,
                   :plain,
@@ -429,28 +321,6 @@
     end
   end
 
-  class Gates
-    attr_accessor :gates
-
-    def initialize(xml)
-      @gates = []
-      xml.each do |g|
-        @gates << Gate.new(g)
-      end
-    end 
-  end
-
-  class Devices
-    attr_accessor :devices
-
-    def initialize(xml)
-      @devices = []
-      xml.each do |d|
-        @devices << Device.new(d)
-      end
-    end
-  end
-
   class Device
     attr_accessor :connects,
                   :technologies,
@@ -473,85 +343,6 @@
     end
   end
 
-  class Technologies
-    attr_accessor :technologies
-
-    def initialize(xml)
-      @technologies = []
-      xml.each do |t|
-        @technologies << Technology.new(t)
-      end
-    end
-  end
-
-  class Technology
-    attr_accessor :attribute,
-                  :name
-
-    def initialize(xml)
-      @name = xml['name']
-      if xml.xpath('attribute').size > 0
-        @attribute = []
-        xml.xpath('attribute').each do |attribute|
-          @attribute << Attribute.new(attribute)
-        end
-      end
-    end
-  end
-
-  class Attribute
-    attr_accessor :name,
-                  :value,
-                  :x,
-                  :y,
-                  :size,
-                  :layer,
-                  :font,
-                  :ratio,
-                  :rot,
-                  :display,
-                  :constant
-
-    def initialize(xml)
-      @name = xml['name']
-      @value = xml['value']
-      @x = xml['x']
-      @y = xml['y']
-      @size = xml['size']
-      @layer = xml['layer']
-      @font = xml['font']
-      @ratio = xml['ratio']
-      @rot = xml['rot']
-      @display = xml['display']
-      @constant = xml['constant']
-    end
-  end
-
-  class Connects
-    attr_accessor :connects
-
-    def initialize(xml)
-      @connects = []
-      xml.each do |c|
-        @connects << Connect.new(c)
-      end
-    end
-  end
-
-  class Connect
-    attr_accessor :gate,
-                  :pin,
-                  :pad,
-                  :route
-
-    def initialize(xml)
-      @gate = xml['gate']
-      @pin = xml['pin']
-      @pad = xml['pad']
-      @route = xml['route']
-    end
-  end
-
   class Bus
     attr_accessor :segment,
                   :name
@@ -571,10 +362,19 @@
   end
 
   class SSignal
-
+    attr_accessor :name,
+                  :class,
+                  :airwireshidden,
+                  :contactref,
+                  :polygon,
+                  :wire,
+                  :via
   end
 
-  class VariantDef
+  #
+  # Basic Objects
+  #
+  class Variantdef
     attr_accessor :name,
                   :current
   end
@@ -584,7 +384,7 @@
                   :populate,
                   :value,
                   :technology
-  end                 
+  end
 
   class Gate
     attr_accessor :name,
@@ -604,7 +404,31 @@
     end              
   end
 
-  
+  class Wire
+    attr_accessor :x1,
+                  :y1,
+                  :x2,
+                  :y2,
+                  :width,
+                  :layer,
+                  :extent,
+                  :style,
+                  :curve,
+                  :cap
+
+    def initialize(xml)
+      @x1 = xml['x1']
+      @y1 = xml['y1']
+      @x2 = xml['x2']
+      @y2 = xml['y2']
+      @width = xml['width']
+      @layer = xml['layer']
+      @extent = xml['extent']
+      @style = xml['style']
+      @curve = xml['curve']
+      @cap = xml['cap']
+    end
+  end
 
   class Dimension
     attr_accessor :x1,
@@ -658,7 +482,7 @@
       @layer = xml['layer']
     end
   end
-      
+
   class Rectangle
     attr_accessor :x1,
                   :y1,
@@ -675,7 +499,7 @@
       @layer = xml['layer']
       @rot = xml['rot']
     end
-  end 
+  end
 
   class Frame
     attr_accessor :x1,
@@ -716,6 +540,7 @@
       @drill = xml['drill']
     end
   end       
+
 
   class Pad
     attr_accessor :name,
@@ -771,54 +596,28 @@
     end
   end
 
-  class Pin
-    attr_accessor :name,
+  class Element
+    attr_accessor :attribute,
+                  :variant,
+                  :name,
+                  :library,
+                  :package,
+                  :value,
                   :x,
                   :y,
-                  :visible,
-                  :length,
-                  :direction,
-                  :function,
-                  :swaplevel,
+                  :locked,
+                  :smashed,
                   :rot
-
-    def initialize(xml)
-      @name = xml['name']
-      @x = xml['x']
-      @y = xml['y']
-      @visible = xml['visible']
-      @length = xml['length']
-      @direction = xml['direction']
-      @function = xml['function']
-      @swaplevel = xml['swaplevel']
-      @rot = xml['rot']
-    end
   end
 
-  class Wire
-    attr_accessor :x1,
-                  :y1,
-                  :x2,
-                  :y2,
-                  :width,
-                  :layer,
+  class Via
+    attr_accessor :x,
+                  :y,
                   :extent,
-                  :style,
-                  :curve,
-                  :cap
-
-    def initialize(xml)
-      @x1 = xml['x1']
-      @y1 = xml['y1']
-      @x2 = xml['x2']
-      @y2 = xml['y2']
-      @width = xml['width']
-      @layer = xml['layer']
-      @extent = xml['extent']
-      @style = xml['style']
-      @curve = xml['curve']
-      @cap = xml['cap']
-    end
+                  :drill,
+                  :diameter,
+                  :shape,
+                  :alwaysstop
   end
 
   class Polygon
@@ -862,3 +661,414 @@
       @curve = xml['curve']
     end
   end
+
+  class Pin
+    attr_accessor :name,
+                  :x,
+                  :y,
+                  :visible,
+                  :length,
+                  :direction,
+                  :function,
+                  :swaplevel,
+                  :rot
+
+    def initialize(xml)
+      @name = xml['name']
+      @x = xml['x']
+      @y = xml['y']
+      @visible = xml['visible']
+      @length = xml['length']
+      @direction = xml['direction']
+      @function = xml['function']
+      @swaplevel = xml['swaplevel']
+      @rot = xml['rot']
+    end
+  end
+
+  class Part
+    attr_accessor :attribute,
+                  :variant,
+                  :name,
+                  :library,
+                  :deviceset,
+                  :device,
+                  :technology,
+                  :value
+  end
+
+  class Instance
+    attr_accessor :attribute,
+                  :part,
+                  :gate,
+                  :x,
+                  :y,
+                  :smashed,
+                  :rot
+  end
+
+  class Label
+    attr_accessor :x,
+                  :y,
+                  :size,
+                  :layer,
+                  :font,
+                  :ratio,
+                  :rot,
+                  :xref
+  end
+
+  class Junction
+    attr_accessor :x,
+                  :y
+  end
+
+  class Connect
+    attr_accessor :gate,
+                  :pin,
+                  :pad,
+                  :route
+
+    def initialize(xml)
+      @gate = xml['gate']
+      @pin = xml['pin']
+      @pad = xml['pad']
+      @route = xml['route']
+    end
+  end
+
+  class Technology
+    attr_accessor :attribute,
+                  :name
+
+    def initialize(xml)
+      @name = xml['name']
+      if xml.xpath('attribute').size > 0
+        @attribute = []
+        xml.xpath('attribute').each do |attribute|
+          @attribute << Attribute.new(attribute)
+        end
+      end
+    end
+  end
+
+  class Attribute
+    attr_accessor :name,
+                  :value,
+                  :x,
+                  :y,
+                  :size,
+                  :layer,
+                  :font,
+                  :ratio,
+                  :rot,
+                  :display,
+                  :constant
+
+    def initialize(xml)
+      @name = xml['name']
+      @value = xml['value']
+      @x = xml['x']
+      @y = xml['y']
+      @size = xml['size']
+      @layer = xml['layer']
+      @font = xml['font']
+      @ratio = xml['ratio']
+      @rot = xml['rot']
+      @display = xml['display']
+      @constant = xml['constant']
+    end
+  end
+
+  class Pinref
+    attr_accessor :part,
+                  :gate,
+                  :pin
+  end
+
+  class Contactref
+    attr_accessor :element,
+                  :pad,
+                  :route,
+                  :routetag
+  end
+
+  #
+  # Object Lists
+  #
+  class Variantdefs
+    attr_accessor :variantdefs
+
+    def initialize(xml)
+
+    end
+  end
+
+  class Settings
+    attr_accessor :alwaysvectorfont,
+                  :verticaltext
+    def initialize(xml)
+      xml.each do |s|
+        @alwaysvectorfont = s['alwaysvectorfont'] if s['alwaysvectorfont']
+        @verticaltext = s['verticaltext'] if s['verticaltext']
+      end
+    end
+  end
+
+  class Sheets
+    attr_accessor :sheets
+
+    def initialize(xml)
+      @sheets = []
+      xml.each do |s|
+        @sheets << Sheet.new(s)
+      end
+    end
+  end
+
+  class Layers
+    attr_accessor :layers
+
+    def initialize(xml)
+      @layers = []
+      xml.each do |l|
+        @layers << Layer.new(l)
+      end
+    end
+  end
+
+  class Packages
+    attr_accessor :packages
+
+    def initialize(xml)
+      @packages = []
+      xml.each do |p|
+        @packages << Package.new(p)
+      end
+    end
+  end
+
+  class Symbols
+    attr_accessor :symbols
+
+    def initialize(xml)
+      @symbols = []
+      xml.each do |p|
+        @symbols << SSymbol.new(p)
+      end
+    end
+  end
+
+  class Devicesets
+    attr_accessor :devicesets
+
+    def initialize(xml)
+      @devicesets = []
+      xml.each do |p|
+        @devicesets << Deviceset.new(p)
+      end
+    end 
+  end
+
+  class Gates
+    attr_accessor :gates
+
+    def initialize(xml)
+      @gates = []
+      xml.each do |g|
+        @gates << Gate.new(g)
+      end
+    end 
+  end
+
+  class Devices
+    attr_accessor :devices
+
+    def initialize(xml)
+      @devices = []
+      xml.each do |d|
+        @devices << Device.new(d)
+      end
+    end
+  end
+
+  class Libraries
+    attr_accessor :libraries
+  end
+
+  class Connects
+    attr_accessor :connects
+
+    def initialize(xml)
+      @connects = []
+      xml.each do |c|
+        @connects << Connect.new(c)
+      end
+    end
+  end
+
+  class Technologies
+    attr_accessor :technologies
+
+    def initialize(xml)
+      @technologies = []
+      xml.each do |t|
+        @technologies << Technology.new(t)
+      end
+    end
+  end
+
+  class Attributes
+    attr_accessor :attributes
+  end
+
+  class Classes
+    attr_accessor :classes
+  end
+
+  class Parts
+    attr_accessor :parts
+  end
+
+  class Instances
+    attr_accessor :instances
+  end
+
+  class Errors
+    attr_accessor :errors
+  end
+
+  class Plain
+    attr_accessor :polygon,
+                  :wire,
+                  :text,
+                  :circle,
+                  :rectangle,
+                  :frame,
+                  :hole
+  end
+
+  class Autorouter
+    attr_accessor :passes
+  end
+
+  class Elements
+    attr_accessor :elements
+  end
+
+  class Signals
+    attr_accessor :signals
+  end
+
+  class Busses
+    attr_accessor :busses
+  end
+
+  class Nets
+    attr_accessor :nets
+  end
+
+  #
+  # Miscellaneous Objects
+  #
+  class Setting
+
+  end
+
+  class Designrules
+    attr_accessor :description,
+                  :param,
+                  :name
+  end
+
+  class Grid
+    attr_accessor :distance,
+                  :unitdist,
+                  :unit,
+                  :style,
+                  :multiple,
+                  :display,
+                  :altdistance,
+                  :altunitdist,
+                  :altunit
+
+    def initialize(xml)
+      @distance = xml['distance']
+      @unitdist = xml['unitdist']
+      @unit = xml['unit']
+      @style = xml['style']
+      @multiple = xml['multiple']
+      @display = xml['display']
+      @altdistance = xml['altdistance']
+      @altunitdist = xml['altunitdist']
+      @altunit = xml['altunit']
+    end
+  end
+
+  class Layer
+    attr_accessor :number,
+                  :name,
+                  :color,
+                  :fill,
+                  :visible,
+                  :active
+    
+    def initialize(xml)
+      @number = xml['number']
+      @name = xml['name']
+      @color = xml['color']
+      @fill = xml['fill']
+      @visible = xml['visible']
+      @active = xml['active']
+    end
+  end
+
+  class Class
+    attr_accessor :clearance,
+                  :number,
+                  :name,
+                  :width,
+                  :drill
+  end
+
+  class Clearance
+    attr_accessor :class,
+                  :value
+  end
+
+  class Description
+    attr_accessor :language,
+                  :description
+
+    def initialize(xml)
+      @language = xml['language']
+      @description = xml.content
+    end
+  end
+
+  class Param
+    attr_accessor :name,
+                  :value
+  end
+
+  class Pass
+    attr_accessor :name,
+                  :refer,
+                  :active
+  end
+
+  class Approved
+    attr_accessor :hash
+  end
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
