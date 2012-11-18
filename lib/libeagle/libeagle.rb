@@ -15,4 +15,4 @@ module LibEagle
   
 end
 
-puts LibEagle::Parser.parse('./test.xml').to_yaml
+puts LibEagle::Parser.parse('./schematic.brd').to_yaml

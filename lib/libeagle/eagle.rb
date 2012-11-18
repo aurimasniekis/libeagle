@@ -1,3 +1,9 @@
+class String
+   def yaml_tag_class_name?
+        true
+    end
+end
+
   #
   # Drawing definitions
   #
@@ -56,7 +62,7 @@
 
       if xml.xpath('layers/layer').size > 0
         layers = xml.xpath('layers/layer')
-        #@layers = Layers.new(layers)
+        @layers = Layers.new(layers)
       end
 
       if library = xml.xpath('library').first
@@ -83,7 +89,7 @@
     def initialize(xml)
       @name = xml['name']
       if description = xml.xpath('description').first
-        #@description = Description.new(description)
+        @description = Description.new(description)
       end
 
       if xml.xpath('packages/package').size > 0
@@ -114,6 +120,43 @@
                   :errors,
                   :xreflabel,
                   :xrefpart
+
+    def initialize(xml)
+      if description = xml.xpath('description').first
+        @description = Description.new(description)
+      end
+
+      if xml.xpath('libraries/library').size > 0
+        libraries = xml.xpath('libraries/library')
+        @libraries = Libraries.new(libraries)
+      end
+      if xml.xpath('attributes/attribute').size > 0
+        attributes = xml.xpath('attributes/attribute')
+        @attributes = Attributes.new(attributes)
+      end
+      if xml.xpath('variantdefs/variantdef').size > 0
+        variantdefs = xml.xpath('variantdefs/variantdef')
+        @variantdefs = Variantdefs.new(variantdefs)
+      end
+      if xml.xpath('classes/class').size > 0
+        classes = xml.xpath('classes/class')
+        @classes = Classes.new(classes)
+      end
+      if xml.xpath('parts/part').size > 0
+        parts = xml.xpath('parts/part')
+        @parts = Parts.new(parts)
+      end
+      if xml.xpath('sheets/sheet').size > 0
+        sheets = xml.xpath('sheets/sheet')
+        @sheets = Sheets.new(sheets)
+      end
+      if xml.xpath('errors/error').size > 0
+        errors = xml.xpath('errors/error')
+        @errors = Errors.new(errors)
+      end
+      @xreflabel = xml['xreflabel']
+      @xrefpart = xml['xrefpart']
+    end
   end
 
   class Board
@@ -139,6 +182,34 @@
                   :instances,
                   :busses,
                   :nets
+
+    def initialize(xml)
+      if description = xml.xpath('description').first
+        @description = Description.new(description)
+      end
+      if xml.xpath('plain').size > 0  
+        @plain = []
+        xml.xpath('plain').each do |plain|
+          @plain << Plain.new(plain)
+        end
+      end
+
+      if xml.xpath('instances/instance').size > 0
+        instances = xml.xpath('instances/instance')
+        @instances = Instances.new(instances)
+      end
+
+      if xml.xpath('busses/bus').size > 0
+        busses = xml.xpath('busses/bus')
+        @busses = Busses.new(busses)
+      end
+
+      if xml.xpath('nets/net').size > 0
+        nets = xml.xpath('nets/net')
+        @nets = Nets.new(nets)
+      end
+
+    end
   end
 
   class Package
@@ -346,12 +417,33 @@
   class Bus
     attr_accessor :segment,
                   :name
+
+    def initialize(xml)
+      if xml.xpath('segment').size > 0
+        @segment = []
+        xml.xpath('segment').each do |segment|
+          @segment << Segment.new(segment)
+        end
+      end
+      @name = xml['name']
+    end
   end
 
   class Net
     attr_accessor :segment,
                   :name,
-                  :class
+                  :cclass
+
+    def initialize(xml)
+      if xml.xpath('segment').size > 0
+        @segment = []
+        xml.xpath('segment').each do |segment|
+          @segment << Segment.new(segment)
+        end
+      end
+      @name = xml['name']
+      @cclass = xml['cclass']  
+    end
   end
 
   class Segment
@@ -359,16 +451,72 @@
                   :wire,
                   :junction,
                   :label
+
+    def initialize(xml)
+      if xml.xpath('pinref').size > 0
+        @pinref = []
+        xml.xpath('pinref').each do |pinref|
+          @pinref << Pinref.new(pinref)
+        end
+      end
+      if xml.xpath('wire').size > 0
+        @wire = []
+        xml.xpath('wire').each do |wire|
+          @wire << Wire.new(wire)
+        end
+      end
+      if xml.xpath('junction').size > 0
+        @junction = []
+        xml.xpath('junction').each do |junction|
+          @junction << Junction.new(junction)
+        end
+      end
+      if xml.xpath('label').size > 0
+        @label = []
+        xml.xpath('label').each do |label|
+          @label << Label.new(label)
+        end
+      end
+    end
   end
 
   class SSignal
     attr_accessor :name,
-                  :class,
+                  :cclass,
                   :airwireshidden,
                   :contactref,
                   :polygon,
                   :wire,
                   :via
+    def initialize(xml)
+      @name = xml['name']
+      @cclass = xml['cclass']
+      @airwireshidden = xml['airwireshidden']
+      if xml.xpath('contactref').size > 0
+        @contactref = []
+        xml.xpath('contactref').each do |contactref|
+          @contactref << Contactref.new(contactref)
+        end
+      end
+      if xml.xpath('polygon').size > 0
+        @polygon = []
+        xml.xpath('polygon').each do |polygon|
+          @polygon << Polygon.new(polygon)
+        end
+      end
+      if xml.xpath('wire').size > 0
+        @wire = []
+        xml.xpath('wire').each do |wire|
+          @wire << Wire.new(wire)
+        end
+      end
+      if xml.xpath('via').size > 0
+        @via = []
+        xml.xpath('via').each do |via|
+          @via << Via.new(via)
+        end
+      end
+    end
   end
 
   #
@@ -377,6 +525,11 @@
   class Variantdef
     attr_accessor :name,
                   :current
+
+    def initialize(xml)
+      @name = xml['name']
+      @current = xml['current']
+    end
   end
 
   class Variant
@@ -384,6 +537,13 @@
                   :populate,
                   :value,
                   :technology
+
+    def initialize(xml)
+      @name = xml['name']
+      @populate = xml['populate']
+      @value = xml['value']
+      @technology = xml['technology']
+    end
   end
 
   class Gate
@@ -438,7 +598,17 @@
                   :x3,
                   :y3,
                   :layer,
-                  :dtype,
+                  :dtype
+    def initialize(xml)
+      @x1 = xml['x1']
+      @y2 = xml['y2']
+      @x2 = xml['x2']
+      @y2 = xml['y2']
+      @x3 = xml['x3']
+      @y3 = xml['y3']
+      @layer = xml['layer']
+      @dtype = xml['dtype']
+    end
   end
 
   class Text
@@ -608,6 +778,30 @@
                   :locked,
                   :smashed,
                   :rot
+
+    def initialize(xml)
+      if xml.xpath('attribute').size > 0
+        @attribute = []
+        xml.xpath('attribute').each do |attribute|
+          @attribute << Attribute.new(attribute)
+        end
+      end
+      if xml.xpath('variant').size > 0
+        @variant = []
+        xml.xpath('variant').each do |variant|
+          @variant << Variant.new(variant)
+        end
+      end
+      @name = xml['name']
+      @library = xml['library']
+      @package = xml['package']
+      @value = xml['value']
+      @x = xml['x']
+      @y = xml['y']
+      @locked = xml['locked']
+      @smashed = xml['smashed']
+      @rot = xml['rot']
+    end
   end
 
   class Via
@@ -618,6 +812,16 @@
                   :diameter,
                   :shape,
                   :alwaysstop
+
+    def initialize(xml)
+      @x = xml['x']
+      @y = xml['y']
+      @extent = xml['extent']
+      @drill = xml['drill']
+      @diameter = xml['diameter']
+      @shape = xml['shape']
+      @alwaysstop = xml['alwaysstop']
+    end
   end
 
   class Polygon
@@ -695,6 +899,27 @@
                   :device,
                   :technology,
                   :value
+
+    def initialize(xml)
+      if xml.xpath('attribute').size > 0
+        @attribute = []
+        xml.xpath('attribute').each do |attribute|
+          @attribute << Attribute.new(attribute)
+        end
+      end
+      if xml.xpath('variant').size > 0
+        @variant = []
+        xml.xpath('variant').each do |variant|
+          @variant << Variant.new(variant)
+        end
+      end
+      @name = xml['name']
+      @library = xml['library']
+      @deviceset = xml['deviceset']
+      @device = xml['device']
+      @technology = xml['technology']
+      @value = xml['value']
+    end
   end
 
   class Instance
@@ -705,6 +930,21 @@
                   :y,
                   :smashed,
                   :rot
+
+    def initialize(xml)
+      if xml.xpath('attribute').size > 0
+        @attribute = []
+        xml.xpath('attribute').each do |attribute|
+          @attribute << Attribute.new(attribute)
+        end
+      end
+      @part = xml['part']
+      @gate = xml['gate']
+      @x = xml['x']
+      @y = xml['y']
+      @smashed = xml['smashed']
+      @rot = xml['rot']
+    end
   end
 
   class Label
@@ -716,11 +956,27 @@
                   :ratio,
                   :rot,
                   :xref
+
+    def initialize(xml)
+      @x = xml['x']
+      @y = xml['y']
+      @size = xml['size']
+      @layer = xml['layer']
+      @font = xml['font']
+      @ratio = xml['ratio']
+      @rot = xml['rot']
+      @xref = xml['xref']
+    end
   end
 
   class Junction
     attr_accessor :x,
                   :y
+
+    def initialize(xml)
+      @x = xml['x']
+      @y = xml['y']
+    end
   end
 
   class Connect
@@ -784,6 +1040,12 @@
     attr_accessor :part,
                   :gate,
                   :pin
+
+    def initialize(xml)
+      @part = xml['part']
+      @gate = xml['gate']
+      @pin = xml['pin']
+    end
   end
 
   class Contactref
@@ -791,6 +1053,13 @@
                   :pad,
                   :route,
                   :routetag
+
+    def initialize(xml)
+      @element = xml['element']
+      @pad = xml['pad']
+      @route = xml['route']
+      @routetag = xml['routetag']
+    end
   end
 
   #
@@ -800,17 +1069,20 @@
     attr_accessor :variantdefs
 
     def initialize(xml)
-
+      @variantdefs = []
+      xml.each do |v|
+        @variantdefs << Variantdef.new(v)
+      end
     end
   end
 
   class Settings
-    attr_accessor :alwaysvectorfont,
-                  :verticaltext
+    attr_accessor :settings
+
     def initialize(xml)
+      @settings = []
       xml.each do |s|
-        @alwaysvectorfont = s['alwaysvectorfont'] if s['alwaysvectorfont']
-        @verticaltext = s['verticaltext'] if s['verticaltext']
+        @settings << Setting.new(s)
       end
     end
   end
@@ -894,6 +1166,13 @@
 
   class Libraries
     attr_accessor :libraries
+
+    def initialize(xml)
+      @libraries = []
+      xml.each do |l|
+        @libraries << Library.new(l)
+      end
+    end
   end
 
   class Connects
@@ -920,22 +1199,57 @@
 
   class Attributes
     attr_accessor :attributes
+
+    def initialize(xml)
+      @attributes = []
+      xml.each do |a|
+        @attributes << Attribute.new(a)
+      end
+    end
   end
 
   class Classes
     attr_accessor :classes
+
+    def initialize(xml)
+      @classes = []
+      xml.each do |c|
+        @classes << CClass.new(c)
+      end
+    end
   end
 
   class Parts
     attr_accessor :parts
+
+    def initialize(xml)
+      @parts = []
+      xml.each do |p|
+        @parts << Part.new(p)
+      end
+    end
   end
 
   class Instances
     attr_accessor :instances
+
+    def initialize(xml)
+      @instances = []
+      xml.each do |i|
+        @instances << Instance.new(i)
+      end
+    end
   end
 
   class Errors
     attr_accessor :errors
+
+    def initialize(xml)
+      @errors = []
+      xml.each do |e|
+        @errors << Error.new(e)
+      end
+    end
   end
 
   class Plain
@@ -946,39 +1260,144 @@
                   :rectangle,
                   :frame,
                   :hole
+
+    def initialize(xml)
+      if xml.xpath('polygon').size > 0  
+        @polygon = []
+        xml.xpath('polygon').each do |polygon|
+          @polygon << Polygon.new(polygon)
+        end
+      end
+
+      if xml.xpath('wire').size > 0
+        @wire = []
+        xml.xpath('wire').each do |wire|
+          @wire << Wire.new(wire)
+        end
+      end
+
+      if xml.xpath('text').size > 0
+        @text = []
+        xml.xpath('text').each do |text|
+          @text << Text.new(text)
+        end
+      end
+
+      if xml.xpath('circle').size > 0
+        @circle = []
+        xml.xpath('circle').each do |circle|
+          @circle << Circle.new(circle)
+        end
+      end
+
+      if xml.xpath('rectangle').size > 0
+        @rectangle = []
+        xml.xpath('rectangle').each do |rectangle|
+          @rectangle << Rectangle.new(rectangle)
+        end
+      end
+
+      if xml.xpath('frame').size > 0
+        @frame = []
+        xml.xpath('frame').each do |frame|
+          @frame << Frame.new(frame)
+        end
+      end
+
+      if xml.xpath('hole').size > 0
+        @hole = []
+        xml.xpath('hole').each do |hole|
+          @hole << Hole.new(hole)
+        end
+      end
+    end
   end
 
   class Autorouter
     attr_accessor :passes
+
+    def initialize(xml)
+      @passes = []
+      xml.each do |p|
+        @passes << Pass.new(p)
+      end
+    end
   end
 
   class Elements
     attr_accessor :elements
+
+    def initialize(xml)
+      @elements = []
+      xml.each do |e|
+        @elements << Element.new(e)
+      end
+    end
   end
 
   class Signals
     attr_accessor :signals
+
+    def initialize(xml)
+      @signals = []
+      xml.each do |s|
+        @signals << Signal.new(s)
+      end
+    end
   end
 
   class Busses
     attr_accessor :busses
+
+    def initialize(xml)
+      @busses = []
+      xml.each do |b|
+        @busses << Bus.new(b)
+      end
+    end
   end
 
   class Nets
     attr_accessor :nets
+
+    def initialize(xml)
+      @nets = []
+      xml.each do |n|
+        @nets << Net.new(n)
+      end
+    end
   end
 
   #
   # Miscellaneous Objects
   #
   class Setting
+    attr_accessor :alwaysvectorfont,
+                  :verticaltext
 
+    def initialize(xml)
+      @alwaysvectorfont = xml['alwaysvectorfont'] if xml['alwaysvectorfont']
+      @verticaltext = xml['verticaltext'] if xml['verticaltext']
+    end
   end
 
   class Designrules
     attr_accessor :description,
                   :param,
                   :name
+
+    def initialize(xml)
+      if description = xml.xpath('description').first
+        @description = Description.new(description)
+      end
+      if xml.xpath('param').size > 0
+        @param = []
+        xml.xpath('param').each do |param|
+          @param << Param.new(param)
+        end
+      end
+      @name = xml['name']
+    end
   end
 
   class Grid
@@ -1023,17 +1442,35 @@
     end
   end
 
-  class Class
+  class CClass
     attr_accessor :clearance,
                   :number,
                   :name,
                   :width,
                   :drill
+
+    def initialize(xml)
+      if xml.xpath('clearance').size > 0
+        @clearance = []
+        xml.xpath('clearance').each do |clearance|
+          @clearance << Clearance.new(clearance)
+        end
+      end
+      @number = xml['number']
+      @name = xml['name']
+      @width = xml['width']
+      @drill = xml['drill']
+    end
   end
 
   class Clearance
-    attr_accessor :class,
+    attr_accessor :cclass,
                   :value
+
+    def initialize(xml)
+      @cclass = xml['cclass']
+      @value = xml['value']
+    end
   end
 
   class Description
@@ -1049,26 +1486,36 @@
   class Param
     attr_accessor :name,
                   :value
+
+    def initialize(xml)
+      @name = xml['name']
+      @value = xml['value']
+    end           
   end
 
   class Pass
-    attr_accessor :name,
+    attr_accessor :param,
+                  :name,
                   :refer,
                   :active
+
+    def initialize(xml)
+      if xml.xpath('param').size > 0
+        @param = []
+        xml.xpath('param').each do |param|
+          @param << Param.new(param)
+        end
+      end
+      @name = xml['name']
+      @refer = xml['refer']
+      @active = xml['active']
+    end
   end
 
   class Approved
     attr_accessor :hash
+
+    def initialize(xml)
+      @hash = xml['hash']
+    end
   end
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
