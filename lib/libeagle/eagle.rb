@@ -98,8 +98,8 @@
       end
 
       if xml.xpath('devicesets/deviceset').size > 0
-        devicesets = xml.xpath('devicesets')
-        #@devicesets = Devicesets.new(devicesets)
+        devicesets = xml.xpath('devicesets/deviceset')
+        @devicesets = Devicesets.new(devicesets)
       end
 
     end
@@ -406,6 +406,49 @@
                   :name,
                   :prefix,
                   :uservalue
+
+    def initialize(xml)
+      @name = xml['name']
+      @prefix = xml['prefix']
+      @uservalue = xml['uservalue']
+
+      if description = xml.xpath('description').first
+        @description = Description.new(description)
+      end
+
+      if xml.xpath('gates/gate').size > 0
+        gates = xml.xpath('gates/gate')
+        @gates = Gates.new(gates)
+      end 
+
+      if xml.xpath('devices/device').size > 0
+        devices = xml.xpath('devices/device')
+        @devices = Devices.new(devices)
+      end
+
+    end
+  end
+
+  class Gates
+    attr_accessor :gates
+
+    def initialize(xml)
+      @gates = []
+      xml.each do |g|
+        @gates << Gate.new(g)
+      end
+    end 
+  end
+
+  class Devices
+    attr_accessor :devices
+
+    def initialize(xml)
+      @devices = []
+      xml.each do |d|
+        @devices << Device.new(d)
+      end
+    end
   end
 
   class Device
@@ -413,6 +456,100 @@
                   :technologies,
                   :name,
                   :package
+
+    def initialize(xml)
+      if xml.xpath('connects/connect').size > 0
+        connects = xml.xpath('connects/connect')
+        @connects = Connects.new(connects)
+      end
+
+      if xml.xpath('technologies/technology').size > 0
+        technologies = xml.xpath('technologies/technology')
+        @technologies = Technologies.new(technologies)
+      end
+
+      @name = xml['name']
+      @package = xml['package']
+    end
+  end
+
+  class Technologies
+    attr_accessor :technologies
+
+    def initialize(xml)
+      @technologies = []
+      xml.each do |t|
+        @technologies << Technology.new(t)
+      end
+    end
+  end
+
+  class Technology
+    attr_accessor :attribute,
+                  :name
+
+    def initialize(xml)
+      @name = xml['name']
+      if xml.xpath('attribute').size > 0
+        @attribute = []
+        xml.xpath('attribute').each do |attribute|
+          @attribute << Attribute.new(attribute)
+        end
+      end
+    end
+  end
+
+  class Attribute
+    attr_accessor :name,
+                  :value,
+                  :x,
+                  :y,
+                  :size,
+                  :layer,
+                  :font,
+                  :ratio,
+                  :rot,
+                  :display,
+                  :constant
+
+    def initialize(xml)
+      @name = xml['name']
+      @value = xml['value']
+      @x = xml['x']
+      @y = xml['y']
+      @size = xml['size']
+      @layer = xml['layer']
+      @font = xml['font']
+      @ratio = xml['ratio']
+      @rot = xml['rot']
+      @display = xml['display']
+      @constant = xml['constant']
+    end
+  end
+
+  class Connects
+    attr_accessor :connects
+
+    def initialize(xml)
+      @connects = []
+      xml.each do |c|
+        @connects << Connect.new(c)
+      end
+    end
+  end
+
+  class Connect
+    attr_accessor :gate,
+                  :pin,
+                  :pad,
+                  :route
+
+    def initialize(xml)
+      @gate = xml['gate']
+      @pin = xml['pin']
+      @pad = xml['pad']
+      @route = xml['route']
+    end
   end
 
   class Bus
@@ -456,6 +593,15 @@
                   :y,
                   :addlevel,
                   :swaplevel
+    
+    def initialize(xml)
+      @name = xml['name']
+      @symbol = xml['symbol']
+      @x = xml['x']
+      @y = xml['y']
+      @addlevel = xml['addlevel']
+      @swaplevel = xml['swaplevel']
+    end              
   end
 
   
