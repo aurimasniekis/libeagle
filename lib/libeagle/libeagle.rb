@@ -1,3 +1,4 @@
+require_relative "base"
 require_relative "eagle"
 require 'yaml'
 require 'nokogiri'
@@ -8,11 +9,11 @@ module LibEagle
     def self.parse(file)
       xml = Nokogiri::XML(IO.read(file))
       root = xml.xpath('//eagle').first
-      eagle = Eagle.new(root)
-      return eagle
+      eagle = Eagle.newXML(root)
+      return eagle.saveXML
     end
   end
   
 end
 
-puts LibEagle::Parser.parse('./schematic.brd').to_yaml
+puts LibEagle::Parser.parse('./schematic.brd')
