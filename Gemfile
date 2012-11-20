@@ -5,4 +5,5 @@ gemspec
 
 
 # We use `nokogiri` to parse Eagle XML Files
-gem 'Nokogiri'
+gem 'nokogiri'
+gem 'htmlentities'

@@ -1,571 +1,597 @@
 #
 # Drawing definitions
 #
-class Eagle
-  attr_accessor :compatibility,
-                :drawing,
-                :version
+class Eagle < LibEagle::Base
+  is_root
+  object :compatibility
+  object :drawing
+  attribute :version, :required => true
 end
 
-class Compatibility
-  attr_accessor :note
+class Compatibility < LibEagle::Base
+  object :note
 end
 
-class Note
-  attr_accessor :note,
-                :version,
-                :severity
+class Note < LibEagle::Base
+  has_content
+  attribute :version, :required => true
+  attribute :severity, :required => true
 end
 
-class Drawing
-  attr_accessor :settings,
-                :grid,
-                :layers,
-                :library,
-                :schematic,
-                :board
+class Drawing < LibEagle::Base
+  object :settings
+  object :grid
+  object :layers
+  object :library
+  object :schematic
+  object :board
 end
 
-class Library
-  attr_accessor :description,
-                :packages,
-                :symbols,
-                :devicesets,
-                :name
+class Library < LibEagle::Base
+  object :description
+  object :packages
+  object :symbols
+  object :devicesets
+  attribute :name
 end
 
-class Schematic
-  attr_accessor :description,
-                :libraries,
-                :attributes,
-                :variantdefs,
-                :classes,
-                :parts,
-                :sheets,
-                :errors,
-                :xreflabel,
-                :xrefpart
+class Schematic < LibEagle::Base
+  object :description
+  object :libraries
+  object :attributes
+  object :variantdefs
+  object :classes
+  object :parts
+  object :sheets
+  object :errors
+  attribute :xreflabel
+  attribute :xrefpart
 end
 
-class Board
-  attr_accessor :description,
-                :plain,
-                :libraries,
-                :attributes,
-                :variantdefs,
-                :classes,
-                :designrules,
-                :autorouter,
-                :elements,
-                :signals,
-                :errors
+class Board < LibEagle::Base
+  object :description
+  object :plain
+  object :libraries
+  object :attributes
+  object :variantdefs
+  object :classes
+  object :designrules
+  object :autorouter
+  object :elements
+  object :signals
+  object :errors
 end
 
 #
 # High Level Objects
 #
-class Sheet
-  attr_accessor :description,
-                :plain,
-                :instances,
-                :busses,
-                :nets
+class Sheet < LibEagle::Base
+  object :description
+  object :plain
+  object :instances
+  object :busses
+  object :nets
 end
 
-class Package
-  attr_accessor :description,
-                :polygon,
-                :wire,
-                :text,
-                :circle,
-                :rectangle,
-                :frame,
-                :hole,
-                :pad,
-                :smd,
-                :name
+class Package < LibEagle::Base
+  object :description
+  object :polygon
+  object :wire
+  object :text
+  object :circle
+  object :rectangle
+  object :frame
+  object :hole
+  object :pad
+  object :smd
+  attribute :name, :required => true
 end
 
-class SSymbol
-  attr_accessor :description,
-                :polygon,
-                :wire,
-                :text,
-                :pin,
-                :circle,
-                :rectangle,
-                :frame,
-                :name
+class SSymbol < LibEagle::Base
+  has_class_name "symbol"
+  object :description
+  object :polygon
+  object :wire
+  object :text
+  object :pin
+  object :circle
+  object :rectangle
+  object :frame
+  attribute :name, :required => true
 end
 
-class Deviceset
-  attr_accessor :description,
-                :gates,
-                :devices,
-                :name,
-                :prefix,
-                :uservalue
+class Deviceset < LibEagle::Base
+  object :description
+  object :gates
+  object :devices
+  attribute :name, :required => true
+  attribute :prefix, :default => ""
+  attribute :uservalue, :default => "no"
 end
 
-class Device
-  attr_accessor :connects,
-                :technologies,
-                :name,
-                :package
+class Device < LibEagle::Base
+  object :connects
+  object :technologies
+  attribute :name, :default => ""
+  attribute :package
 end
 
-class Bus
-  attr_accessor :segment,
-                :name
+class Bus < LibEagle::Base
+  object :segment
+  attribute :name, :required => true
 end
 
-class Net
-  attr_accessor :segment,
-                :name,
-                :cclass
+class Net < LibEagle::Base
+  object :segment
+  attribute :name, :required => true
+  attribute :class, :default => "0"
 end
 
-class Segment
-  attr_accessor :pinref,
-                :wire,
-                :junction,
-                :label
+class Segment < LibEagle::Base
+  object :pinref
+  object :wire
+  object :junction
+  object :label
 end
 
-class SSignal
-  attr_accessor :name,
-                :cclass,
-                :airwireshidden,
-                :contactref,
-                :polygon,
-                :wire,
-                :via
+class SSignal < LibEagle::Base
+  attribute :name, :required => true
+  attribute :class, :default => "0"
+  attribute :airwireshidden, :default => "no"
+  object :contactref
+  object :polygon
+  object :wire
+  object :via
 end
 
 #
 # Basic Objects
 #
-class Variantdef
-  attr_accessor :name,
-                :current
+class Variantdef < LibEagle::Base
+  no_end_tag
+  attribute :name, :required => true
+  attribute :current, :default => "no"
 end
 
-class Variant
-  attr_accessor :name,
-                :populate,
-                :value,
-                :technology
+class Variant < LibEagle::Base
+  no_end_tag
+  attribute :name, :required => true
+  attribute :populate, :default => "yes"
+  attribute :value
+  attribute :technology
 end
 
-class Gate
-  attr_accessor :name,
-                :symbol,
-                :x,
-                :y,
-                :addlevel,
-                :swaplevel
+class Gate < LibEagle::Base
+  no_end_tag
+  attribute :name, :required => true
+  attribute :symbol, :required => true
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :addlevel, :default => "next"
+  attribute :swaplevel, :default => 0
 end
 
-class Wire
-  attr_accessor :x1,
-                :y1,
-                :x2,
-                :y2,
-                :width,
-                :layer,
-                :extent,
-                :style,
-                :curve,
-                :cap
+class Wire < LibEagle::Base
+  no_end_tag
+  attribute :x1, :required => true
+  attribute :y1, :required => true
+  attribute :x2, :required => true
+  attribute :y2, :required => true
+  attribute :width, :required => true
+  attribute :layer, :required => true
+  attribute :extent
+  attribute :style, :default => "continuous"
+  attribute :curve, :default => "0"
+  attribute :cap, :default => "round"
 end
 
-class Dimension
-  attr_accessor :x1,
-                :y2,
-                :x2,
-                :y2,
-                :x3,
-                :y3,
-                :layer,
-                :dtype
+class Dimension < LibEagle::Base
+  no_end_tag
+  attribute :x1, :required => true
+  attribute :y2, :required => true
+  attribute :x2, :required => true
+  attribute :y2, :required => true
+  attribute :x3, :required => true
+  attribute :y3, :required => true
+  attribute :layer, :required => true
+  attribute :dtype, :default => "continuous"
 end
 
-class Text
-  attr_accessor :x,
-                :y,
-                :size,
-                :layer,
-                :font,
-                :ratio,
-                :rot,
-                :align,
-                :distance,
-                :text
+class Text < LibEagle::Base
+  has_content
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :size, :required => true
+  attribute :layer, :required => true
+  attribute :font, :default => "proportional"
+  attribute :ratio, :default => "8"
+  attribute :rot, :default => "R0"
+  attribute :align, :default => "bottom-left"
+  attribute :distance, :default => "50"
 end
 
-class Circle
-  attr_accessor :x,
-                :y,
-                :radius,
-                :width,
-                :layer
+class Circle < LibEagle::Base
+  no_end_tag
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :radius, :required => true
+  attribute :width, :required => true
+  attribute :layer, :required => true
 end
 
-class Rectangle
-  attr_accessor :x1,
-                :y1,
-                :x2,
-                :y2,
-                :layer,
-                :rot
+class Rectangle < LibEagle::Base
+  no_end_tag
+  attribute :x1, :required => true
+  attribute :y1, :required => true
+  attribute :x2, :required => true
+  attribute :y2, :required => true
+  attribute :layer, :required => true
+  attribute :rot, :default => "R0"
 end
 
-class Frame
-  attr_accessor :x1,
-                :y2,
-                :x2,
-                :y2,
-                :columns,
-                :rows,
-                :layer,
-                :border_left,
-                :border_top,
-                :border_right,
-                :border_bottom
+class Frame < LibEagle::Base
+  no_end_tag
+  attribute :x1, :required => true
+  attribute :y2, :required => true
+  attribute :x2, :required => true
+  attribute :y2, :required => true
+  attribute :columns, :required => true
+  attribute :rows, :required => true
+  attribute :layer, :required => true
+  attribute :border_left, :default => "yes"
+  attribute :border_top, :default => "yes"
+  attribute :border_right, :default => "yes"
+  attribute :border_bottom, :default => "yes"
 end
 
-class Hole
-  attr_accessor :x,
-                :y,
-                :drill
+class Hole < LibEagle::Base
+  no_end_tag
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :drill, :required => true
 end       
 
 
-class Pad
-  attr_accessor :name,
-                :x,
-                :y,
-                :drill,
-                :diameter,
-                :shape,
-                :rot,
-                :stop,
-                :thermals,
-                :first
+class Pad < LibEagle::Base
+  no_end_tag
+  attribute :name, :required => true
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :drill, :required => true
+  attribute :diameter, :default => "0"
+  attribute :shape, :default => "round"
+  attribute :rot, :default => "R0"
+  attribute :stop, :default => "yes"
+  attribute :thermals, :default => "yes"
+  attribute :first, :default => "no"
 end
 
-class Smd
-  attr_accessor :name,
-                :x,
-                :y,
-                :dx,
-                :dy,
-                :layer,
-                :roundness,
-                :rot,
-                :stop,
-                :thermals,
-                :cream
+class Smd < LibEagle::Base
+  no_end_tag
+  attribute :name, :required => true
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :dx, :required => true
+  attribute :dy, :required => true
+  attribute :layer, :required => true
+  attribute :roundness, :default => "0"
+  attribute :rot, :default => "R0"
+  attribute :stop, :default => "yes"
+  attribute :thermals, :default => "yes"
+  attribute :cream, :default => "yes"
 end
 
-class Element
-  attr_accessor :attribute,
-                :variant,
-                :name,
-                :library,
-                :package,
-                :value,
-                :x,
-                :y,
-                :locked,
-                :smashed,
-                :rot
+class Element < LibEagle::Base
+  object :attribute
+  object :variant
+  attribute :name, :required => true
+  attribute :library, :required => true
+  attribute :package, :required => true
+  attribute :value, :required => true
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :locked, :default => "no"
+  attribute :smashed, :default => "no"
+  attribute :rot, :default => "R0"
 end
 
-class Via
-  attr_accessor :x,
-                :y,
-                :extent,
-                :drill,
-                :diameter,
-                :shape,
-                :alwaysstop
+class Via < LibEagle::Base
+  no_end_tag
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :extent, :required => true
+  attribute :drill, :required => true
+  attribute :diameter, :default => "0"
+  attribute :shape, :default => "round"
+  attribute :alwaysstop, :default => "no"
 end
 
-class Polygon
-  attr_accessor :vertex,
-                :width,
-                :layer,
-                :spacing,
-                :pour,
-                :isolate,
-                :orphans,
-                :thermals,
-                :rank
+class Polygon < LibEagle::Base
+  object :vertex
+  attribute :width, :required => true
+  attribute :layer, :required => true
+  attribute :spacing
+  attribute :pour, :default => "solid"
+  attribute :isolate
+  attribute :orphans, :default => "no"
+  attribute :thermals, :default => "yes"
+  attribute :rank, :default => "0"
 end
 
-class Vertex
-  attr_accessor :x,
-                :y,
-                :curve
+class Vertex < LibEagle::Base
+  no_end_tag
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :curve, :default => "0"
 end
 
-class Pin
-  attr_accessor :name,
-                :x,
-                :y,
-                :visible,
-                :length,
-                :direction,
-                :function,
-                :swaplevel,
-                :rot
+class Pin < LibEagle::Base
+  no_end_tag
+  attribute :name, :required => true
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :visible, :default => "both"
+  attribute :length, :default => "long"
+  attribute :direction, :default => "io"
+  attribute :function, :default => "none"
+  attribute :swaplevel, :default => "0"
+  attribute :rot, :default => "R0"
 end
 
-class Part
-  attr_accessor :attribute,
-                :variant,
-                :name,
-                :library,
-                :deviceset,
-                :device,
-                :technology,
-                :value
+class Part < LibEagle::Base
+  object :attribute
+  object :variant
+  attribute :name, :required => true
+  attribute :library, :required => true
+  attribute :deviceset, :required => true
+  attribute :device, :required => true
+  attribute :technology, :default => ""
+  attribute :value
 end
 
-class Instance
-  attr_accessor :attribute,
-                :part,
-                :gate,
-                :x,
-                :y,
-                :smashed,
-                :rot
+class Instance < LibEagle::Base
+  object :attribute
+  attribute :part, :required => true
+  attribute :gate, :required => true
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :smashed, :default => "no"
+  attribute :rot, :default => "R0"
 end
 
-class Label
-  attr_accessor :x,
-                :y,
-                :size,
-                :layer,
-                :font,
-                :ratio,
-                :rot,
-                :xref
+class Label < LibEagle::Base
+  no_end_tag
+  attribute :x, :required => true
+  attribute :y, :required => true
+  attribute :size, :required => true
+  attribute :layer, :required => true
+  attribute :font, :default => "proportional"
+  attribute :ratio, :default => "8"
+  attribute :rot, :default => "R0"
+  attribute :xref, :default => "no"
 end
 
-class Junction
-  attr_accessor :x,
-                :y
+class Junction < LibEagle::Base
+  no_end_tag
+  attribute :x, :required => true
+  attribute :y, :required => true
 end
 
-class Connect
-  attr_accessor :gate,
-                :pin,
-                :pad,
-                :route
+class Connect < LibEagle::Base
+  no_end_tag
+  attribute :gate, :required => true
+  attribute :pin, :required => true
+  attribute :pad, :required => true
+  attribute :route, :default => "all"
 end
 
-class Technology
-  attr_accessor :attribute,
-                :name
+class Technology < LibEagle::Base
+  object :attribute
+  attribute :name, :required => true
 end
 
-class Attribute
-  attr_accessor :name,
-                :value,
-                :x,
-                :y,
-                :size,
-                :layer,
-                :font,
-                :ratio,
-                :rot,
-                :display,
-                :constant
+class Attribute < LibEagle::Base
+  no_end_tag
+  attribute :name, :required => true
+  attribute :value
+  attribute :x
+  attribute :y
+  attribute :size
+  attribute :layer
+  attribute :font
+  attribute :ratio
+  attribute :rot, :default => "R0"
+  attribute :display, :default => "value"
+  attribute :constant, :default => "no"
 end
 
-class Pinref
-  attr_accessor :part,
-                :gate,
-                :pin
+class Pinref < LibEagle::Base
+  no_end_tag
+  attribute :part, :required => true
+  attribute :gate, :required => true
+  attribute :pin, :required => true
 end
 
-class Contactref
-  attr_accessor :element,
-                :pad,
-                :route,
-                :routetag
+class Contactref < LibEagle::Base
+  no_end_tag
+  attribute :element, :required => true
+  attribute :pad, :required => true
+  attribute :route, :default => "all"
+  attribute :routetag, :default => ""
 end
 
 #
 # Object Lists
 #
-class Variantdefs
-  attr_accessor :variantdefs
+class Variantdefs < LibEagle::Base
+  object :variantdef
 end
 
-class Settings
-  attr_accessor :settings
+class Settings < LibEagle::Base
+  object :setting
 end
 
-class Sheets
-  attr_accessor :sheets
+class Sheets < LibEagle::Base
+  object :sheet
 end
 
-class Layers
-  attr_accessor :layers
+class Layers < LibEagle::Base
+  object :layer
 end
 
-class Packages
-  attr_accessor :packages
+class Packages < LibEagle::Base
+  object :package
 end
 
-class Symbols
-  attr_accessor :symbols
+class Symbols < LibEagle::Base
+  object :symbol, :class => "SSymbol"
 end
 
-class Devicesets
-  attr_accessor :devicesets
+class Devicesets < LibEagle::Base
+  object :deviceset
 end
 
-class Gates
-  attr_accessor :gates
+class Gates < LibEagle::Base
+  object :gate
 end
 
-class Devices
-  attr_accessor :devices
+class Devices < LibEagle::Base
+  object :device
 end
 
-class Libraries
-  attr_accessor :libraries
+class Libraries < LibEagle::Base
+  object :librarie
 end
 
-class Connects
-  attr_accessor :connects
+class Connects < LibEagle::Base
+  object :connect
 end
 
-class Technologies
-  attr_accessor :technologies
+class Technologies < LibEagle::Base
+  object :technologie
 end
 
-class Attributes
-  attr_accessor :attributes
+class Attributes < LibEagle::Base
+  object :attribute
 end
 
-class Classes
-  attr_accessor :classes
+class Classes < LibEagle::Base
+  object :class, :class => "CClass"
 end
 
-class Parts
-  attr_accessor :parts
+class Parts < LibEagle::Base
+  object :part
 end
 
-class Instances
-  attr_accessor :instances
+class Instances < LibEagle::Base
+  object :instance
 end
 
-class Errors
-  attr_accessor :errors
+class Errors < LibEagle::Base
+  object :error
 end
 
-class Plain
-  attr_accessor :polygon,
-                :wire,
-                :text,
-                :circle,
-                :rectangle,
-                :frame,
-                :hole
+class Plain < LibEagle::Base
+  object :polygon
+  object :wire
+  object :text
+  object :circle
+  object :rectangle
+  object :frame
+  object :hole
 end
 
-class Autorouter
-  attr_accessor :passes
+class Autorouter < LibEagle::Base
+  object :passe
 end
 
-class Elements
-  attr_accessor :elements
+class Elements < LibEagle::Base
+  object :element
 end
 
-class Signals
-  attr_accessor :signals
+class Signals < LibEagle::Base
+  object :signal
 end
 
-class Busses
-  attr_accessor :busses
+class Busses < LibEagle::Base
+  object :busse
 end
 
-class Nets
-  attr_accessor :nets
-
-  def initialize(xml)
+class Nets < LibEagle::Base
+  object :net
 end
 
 #
 # Miscellaneous Objects
 #
-class Setting
-  attr_accessor :alwaysvectorfont,
-                :verticaltext
+class Setting < LibEagle::Base
+  no_end_tag
+  attribute :alwaysvectorfont
+  attribute :verticaltext
 end
 
-class Designrules
-  attr_accessor :description,
-                :param,
-                :name
+class Designrules < LibEagle::Base
+  object :description
+  object :param
+  attribute :name, :required => true
 end
 
-class Grid
-  attr_accessor :distance,
-                :unitdist,
-                :unit,
-                :style,
-                :multiple,
-                :display,
-                :altdistance,
-                :altunitdist,
-                :altunit
+class Grid < LibEagle::Base
+  no_end_tag
+  attribute :distance
+  attribute :unitdist
+  attribute :unit
+  attribute :style, :default => "lines"
+  attribute :multiple, :default => "0"
+  attribute :display, :default => "no"
+  attribute :altdistance
+  attribute :altunitdist
+  attribute :altunit
 end
 
-class Layer
-  attr_accessor :number,
-                :name,
-                :color,
-                :fill,
-                :visible,
-                :active
+class Layer < LibEagle::Base
+  no_end_tag
+  attribute :number, :required => true
+  attribute :name, :required => true
+  attribute :color, :required => true
+  attribute :fill, :required => true
+  attribute :visible, :default => "yes"
+  attribute :active, :default => "yes"
 end
 
-class CClass
-  attr_accessor :clearance,
-                :number,
-                :name,
-                :width,
-                :drill
+class CClass < LibEagle::Base
+  object :clearance
+  attribute :number, :required => true
+  attribute :name, :required => true
+  attribute :width, :default => "0"
+  attribute :drill, :default => "0"
 end
 
-class Clearance
-  attr_accessor :cclass,
-                :value
+class Clearance < LibEagle::Base
+  no_end_tag
+  attribute :class, :required => true
+  attribute :value, :default => "0"
 end
 
-class Description
-  attr_accessor :language,
-                :description
+class Description < LibEagle::Base
+  has_content
+  attribute :language
 end
 
-class Param
-  attr_accessor :name,
-                :value
+class Param < LibEagle::Base
+  no_end_tag
+  attribute :name, :required => true
+  attribute :value, :required => true
 end
 
-class Pass
-  attr_accessor :param,
-                :name,
-                :refer,
-                :active
+class Pass < LibEagle::Base
+  object :param
+  attribute :name, :required => true
+  attribute :refer
+  attribute :active, :default => "yes"
 end
 
-class Approved
-  attr_accessor :hash
+class Approved < LibEagle::Base
+  no_end_tag
+  attribute :hash, :required => true
 end

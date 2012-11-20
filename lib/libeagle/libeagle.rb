@@ -2,6 +2,7 @@ require_relative "base"
 require_relative "eagle"
 require 'yaml'
 require 'nokogiri'
+require 'HTMLEntities'
 raise "LibEagle requires Ruby >= 1.8.6" if RUBY_VERSION < "1.8.6"
 
 module LibEagle
@@ -16,4 +17,4 @@ module LibEagle
   
 end
 
-puts LibEagle::Parser.parse('./schematic.brd')
+puts LibEagle::Parser.parse('./test.xml')
