@@ -1,5 +1,7 @@
+require_relative "xml"
 require_relative "base"
 require_relative "eagle"
+require 'pp'
 require 'yaml'
 require 'nokogiri'
 require 'HTMLEntities'
@@ -11,10 +13,11 @@ module LibEagle
       xml = Nokogiri::XML(IO.read(file))
       root = xml.xpath('//eagle').first
       eagle = Eagle.newXML(root)
-      return eagle.saveXML
+      return eagle
     end
   end
   
 end
 
-puts LibEagle::Parser.parse('./test.xml')
+xml = LibEagle::Parser.parse('./schematic.sch')
+puts xml.saveXML

@@ -3,193 +3,177 @@ module LibEagle
   class AttributeValueInvalid < StandardError; end
   class Base
 
-    def self.eagle_attributes
-      @eagle_attributes ||= Hash.new
-    end
-
-    def self.eagle_objects
-      @eagle_objects ||= Hash.new
-    end
-
-    def self.end_tag
-      @end_tag ||= false
-    end
-
-    def self.root
-      @root ||= false
-    end
-
-    def self.eagle_content
-      @eagle_content ||= false
-    end
-
-    def self.eagle_class
-      @eagle_class ||= false
-    end
-
-    def self.has_content
-      @eagle_content = true
-      define_method "content".to_sym do
-        instance_variable_get("@content")
-      end
-
-      define_method "content=".to_sym do |value|
-        instance_variable_set("@content",value)
+    def self.parse_params(params)
+      if params.size > 0
+        return params.first
+      else
+        return nil
       end
     end
 
-    def self.object(*args)
-      object_name = args.first.to_s
-      if args.size > 1
-        params = args.last
-      end
+    
 
-      eagle_objects[object_name] ||= Hash.new
-
-      eagle_objects[object_name][:class] = params[:class] if params && params[:class]
-      eagle_objects[object_name][:class] = object_name.capitalize unless params && params[:class]
-
-      define_method object_name.to_sym do
-        instance_variable_get("@#{object_name}")
-      end
-
-      define_method "#{object_name}=".to_sym do |value|
-        instance_variable_set("@#{object_name}",value)
-      end
+    def self.iname(name)
+      name.gsub(/^class$/, "clazz")
     end
 
-    def self.attribute(*args)
-      attribute_name = args.first.to_s
-      if args.size > 1
-        params = args.last
-      end
+    #
+    # Getter of LibEagle objects
+    def self.lib_eagle_objects
+      @lib_eagle_objects ||= Hash.new
+      @lib_eagle_objects[:attributes] ||= {}
+      @lib_eagle_objects[:objects] ||= {}
+      @lib_eagle_objects[:empty_element] ||= false
+      @lib_eagle_objects[:root_element] ||= false
+      @lib_eagle_objects[:text_content] ||= false
+      @lib_eagle_objects[:element_name] ||= false
+      @lib_eagle_objects
+    end
 
-      eagle_attributes[attribute_name] ||= Hash.new
-      eagle_attributes[attribute_name][:required] = true if params && params[:required]
-      eagle_attributes[attribute_name][:valid_values] = params[:valid_values] if params && params[:valid_values]
+    def self.empty_element
+      lib_eagle_objects[:empty_element] = true
+    end
 
-      if params && params[:default]
-        define_method attribute_name.to_sym do
-          instance_variable_set("@#{attribute_name}",params[:default]) unless instance_variable_defined?("@#{attribute_name}")
-          instance_variable_get("@#{attribute_name}")
+    def self.root_element
+      lib_eagle_objects[:root_element] = true
+    end
+
+    def self.text_content
+      lib_eagle_objects[:text_content] = true
+
+      # Define Setter and getter
+      attr_accessor :content
+    end
+
+    def self.change_element_name(element_name)
+      lib_eagle_objects[:element_name] = true
+      define_method "element_name".to_sym do
+          instance_variable_set("@element_name", element_name) unless instance_variable_defined?("@element_name")
+          instance_variable_get("@element_name")
         end
-      else 
-        define_method attribute_name.to_sym do
-          instance_variable_get("@#{attribute_name}")
+    end
+
+
+    def self.attribute(attribute_name, *params)
+      attribute_name = attribute_name.to_s
+      variable_name = "@attribute_#{attribute_name}"
+      params = parse_params(params)
+
+      # Initialize place inside LibEagle objects
+      lib_eagle_objects[:attributes][attribute_name] ||= {}
+      lib_eagle_objects[:attributes][attribute_name][:required] = true if params && params[:required]
+      lib_eagle_objects[:attributes][attribute_name][:valid_values] = params[:valid_values] if params && params[:valid_values]
+
+      # If default value is set return default value
+      if params&& params[:default]
+        define_method "attribute_#{attribute_name}".to_sym do
+          instance_variable_set(variable_name, params[:default]) unless instance_variable_defined?(variable_name)
+          instance_variable_get(variable_name)
+        end
+      else
+        define_method "attribute_#{attribute_name}".to_sym do
+          instance_variable_get(variable_name)
         end
       end
 
-      define_method "#{attribute_name}=".to_sym do |value|
-        instance_variable_set("@#{attribute_name}",value)
+      # Attribute setter
+      define_method "attribute_#{attribute_name}=".to_sym do |value|
+        instance_variable_set(variable_name,value)
       end
     end
 
-    def self.no_end_tag
-      @end_tag = true
-    end
+    def self.object(object_name, *params)
+      object_name = object_name.to_s
+      variable_name = "@object_#{object_name}"
+      params = parse_params(params)
 
-    def self.is_root
-      @root = true
-    end
+      # Initialize place inside LibEagle objects
+      lib_eagle_objects[:objects][object_name] ||= {}
+      lib_eagle_objects[:objects][object_name][:class] = params[:class] if params && params[:class]
+      lib_eagle_objects[:objects][object_name][:class] = object_name.capitalize unless params && params[:class]
 
-    def self.has_class_name(arg)
-      @eagle_class = true
-      @base.instance_variable_set("@class_name", arg.downcase)
+      # Object getter
+      define_method "object_#{object_name}".to_sym do
+        instance_variable_get(variable_name)
+      end
+
+      # Object setter
+      define_method "object_#{object_name}=".to_sym do |value|
+        instance_variable_set(variable_name,value)
+      end
     end
 
     def self.newXML(xml)
-      @base = self.new
-      if @eagle_content
-        @base.instance_variable_set("@content",xml.content)
+      @base_class = self.new
+
+      if @lib_eagle_objects[:text_content]
+        @base_class.instance_variable_set("@content", xml.content)
       end
-      if @eagle_attributes
-        @eagle_attributes.each_key do |attribute|
-          @base.instance_variable_set("@#{attribute}",xml[attribute]) if xml[attribute]
+
+      if @lib_eagle_objects[:attributes].size > 0
+        @lib_eagle_objects[:attributes].each_pair do |attribute_name, params|
+          @base_class.instance_variable_set("@attribute_#{attribute_name}",xml[attribute_name]) if xml[attribute_name]
         end
       end
 
-      if @eagle_objects
-        @eagle_objects.each_pair do |object, params|
-          if xml.xpath(object).size > 1
+      if @lib_eagle_objects[:objects].size > 0
+        @lib_eagle_objects[:objects].each_pair do |object_name, params|
+          if xml.xpath(object_name).size > 1
             objects = []
-            xml.xpath(object).each do |node|
-              objects << Object::const_get(params[:class]).newXML(node)
+            xml.xpath(object_name).each do |xml_node|
+              objects << LibEagle::const_get(params[:class]).newXML(xml_node)
             end
-            @base.instance_variable_set("@#{object}",objects)
-          elsif xml.xpath(object).size == 1
-            xml_node = xml.xpath(object).first
-            @base.instance_variable_set("@#{object}",Object::const_get(params[:class]).newXML(xml_node))
+            @base_class.instance_variable_set("@object_#{object_name}",objects)
+          elsif xml.xpath(object_name).size == 1
+            xml_node = xml.xpath(object_name).first
+            object = LibEagle::const_get(params[:class]).newXML(xml_node)
+            @base_class.instance_variable_set("@object_#{object_name}",object)
           end
         end
       end
-      @base
+
+      return @base_class
     end
 
-    def saveXML
-      coder = HTMLEntities.new
-      if is_valid?
-        output = ""
-        if self.class.root
-          output << %(<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE eagle SYSTEM "eagle.dtd">\n)
-        end
-        if self.class.eagle_class
-          class_name = @base.instance_variable_get("@class_name")
-        else
-          class_name = self.class.name.downcase
-        end
-        output << "<#{class_name}"
-        self.class.eagle_attributes.each_pair do |attribute, value|
-          var = self.instance_variable_get("@#{attribute}")
-          var = coder.encode(var) if var
-          output << " #{attribute}=\"#{var}\"" if var
-        end
-        if self.class.end_tag
-          output << "/>\n"
-        else
-          output << ">\n"
-          self.class.eagle_objects.each_pair do |object, params|
-            objects = self.instance_variable_get("@#{object}")
-            if objects.is_a? Array
-              objects.each do |obj|
-                output << obj.saveXML
-              end
-            elsif objects != nil
-              output << objects.saveXML
-            end
-          end
-          if self.class.eagle_content
-            output << coder.encode(@content)
-          end
-          output << "</#{class_name}>\n"
-        end
-        output
-      else
-        return false
-      end
-    end
+    # self.class.eagle_attributes.each_pair do |attribute, params|
+    #     if params[:required]
+    #       unless send "#{attribute}"
+    #         raise AttributeRequired.new("#{self.class.name}: #{attribute} is required")
+    #         return false
+    #       end
+    #     end
 
+    #     if params[:valid_values]
+    #       value = send "#{attribute}"
+    #       is_valid = params[:valid_values].detect do |valid_value|
+    #         Regexp.new("^#{valid_value}$") =~ value
+    #       end
+    #       unless is_valid
+    #          raise AttributeValueInvalid.new("`#{attribute}` value: \"#{value}\" isn't in valid range (#{params[:valid_values]})")
+    #          return false
+    #       end
+    #     end
+    #     return true
+    #   end
+    # end
 
     def is_valid?
-      self.class.eagle_attributes.each_pair do |attribute, params|
+      self.class.lib_eagle_objects[:attributes].each_pair do |attribute, params|
         if params[:required]
-          unless send "#{attribute}"
+          unless self.instance_variable_get("@attribute_#{attribute}")
             raise AttributeRequired.new("#{self.class.name}: #{attribute} is required")
             return false
-          end
-        end
-
-        if params[:valid_values]
-          value = send "#{attribute}"
-          is_valid = params[:valid_values].detect do |valid_value|
-            Regexp.new("^#{valid_value}$") =~ value
-          end
-          unless is_valid
-             raise AttributeValueInvalid.new("`#{attribute}` value: \"#{value}\" isn't in valid range (#{params[:valid_values]})")
-             return false
           end
         end
         return true
       end
     end
+
+    def saveXML
+      if is_valid?
+        LibEagle::XML.new(self.class.lib_eagle_objects,self).parse
+      end
+    end
+
   end
 end
