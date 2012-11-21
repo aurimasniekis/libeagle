@@ -1,6 +1,7 @@
 require_relative "xml"
 require_relative "base"
 require_relative "eagle"
+require_relative "types"
 require 'pp'
 require 'yaml'
 require 'nokogiri'

@@ -1,3 +1,4 @@
+require_relative "types"
 module LibEagle
   #
   # Drawing definitions
@@ -16,7 +17,7 @@ module LibEagle
   class Note < LibEagle::Base
     text_content
     attribute :version, :required => true
-    attribute :severity, :required => true
+    attribute :severity, :required => true, :type => LibEagle::Types.Severity
   end
 
   class Drawing < LibEagle::Base
@@ -88,8 +89,7 @@ module LibEagle
     attribute :name, :required => true
   end
 
-  class SSymbol < LibEagle::Base
-    change_element_name "symbol"
+  class Symbol < LibEagle::Base
     object :description
     object :polygon
     object :wire
@@ -107,7 +107,7 @@ module LibEagle
     object :devices
     attribute :name, :required => true
     attribute :prefix, :default => ""
-    attribute :uservalue, :default => "no"
+    attribute :uservalue, :default => "no", :type => LibEagle::Types.Bool
   end
 
   class Device < LibEagle::Base
@@ -135,11 +135,10 @@ module LibEagle
     object :label
   end
 
-  class SSignal < LibEagle::Base
-    change_element_name "signal"
+  class Signal < LibEagle::Base
     attribute :name, :required => true
     attribute :class, :default => "0"
-    attribute :airwireshidden, :default => "no"
+    attribute :airwireshidden, :default => "no", :type => LibEagle::Types.Bool
     object :contactref
     object :polygon
     object :wire
@@ -152,13 +151,13 @@ module LibEagle
   class Variantdef < LibEagle::Base
     empty_element
     attribute :name, :required => true
-    attribute :current, :default => "no"
+    attribute :current, :default => "no", :type => LibEagle::Types.Bool
   end
 
   class Variant < LibEagle::Base
     empty_element
     attribute :name, :required => true
-    attribute :populate, :default => "yes"
+    attribute :populate, :default => "yes", :type => LibEagle::Types.Bool
     attribute :value
     attribute :technology
   end
@@ -169,7 +168,7 @@ module LibEagle
     attribute :symbol, :required => true
     attribute :x, :required => true
     attribute :y, :required => true
-    attribute :addlevel, :default => "next"
+    attribute :addlevel, :default => "next", :type => LibEagle::Types.GateAddLevel
     attribute :swaplevel, :default => 0
   end
 
@@ -182,9 +181,9 @@ module LibEagle
     attribute :width, :required => true
     attribute :layer, :required => true
     attribute :extent
-    attribute :style, :default => "continuous"
+    attribute :style, :default => "continuous", :type => LibEagle::Types.WireStyle
     attribute :curve, :default => "0"
-    attribute :cap, :default => "round"
+    attribute :cap, :default => "round", :type => LibEagle::Types.WireCap
   end
 
   class Dimension < LibEagle::Base
@@ -196,7 +195,7 @@ module LibEagle
     attribute :x3, :required => true
     attribute :y3, :required => true
     attribute :layer, :required => true
-    attribute :dtype, :default => "continuous"
+    attribute :dtype, :default => "continuous", :type => LibEagle::Types.DimensionType
   end
 
   class Text < LibEagle::Base
@@ -205,10 +204,10 @@ module LibEagle
     attribute :y, :required => true
     attribute :size, :required => true
     attribute :layer, :required => true
-    attribute :font, :default => "proportional"
+    attribute :font, :default => "proportional", :type => LibEagle::Types.TextFont
     attribute :ratio, :default => "8"
     attribute :rot, :default => "R0"
-    attribute :align, :default => "bottom-left"
+    attribute :align, :default => "bottom-left", :type => LibEagle::Types.Align
     attribute :distance, :default => "50"
   end
 
@@ -240,10 +239,10 @@ module LibEagle
     attribute :columns, :required => true
     attribute :rows, :required => true
     attribute :layer, :required => true
-    attribute :border_left, :default => "yes"
-    attribute :border_top, :default => "yes"
-    attribute :border_right, :default => "yes"
-    attribute :border_bottom, :default => "yes"
+    attribute :border_left, :default => "yes", :type => LibEagle::Types.Bool
+    attribute :border_top, :default => "yes", :type => LibEagle::Types.Bool
+    attribute :border_right, :default => "yes", :type => LibEagle::Types.Bool
+    attribute :border_bottom, :default => "yes", :type => LibEagle::Types.Bool
   end
 
   class Hole < LibEagle::Base
@@ -261,11 +260,11 @@ module LibEagle
     attribute :y, :required => true
     attribute :drill, :required => true
     attribute :diameter, :default => "0"
-    attribute :shape, :default => "round"
+    attribute :shape, :default => "round", :type => LibEagle::Types.PadShape
     attribute :rot, :default => "R0"
-    attribute :stop, :default => "yes"
-    attribute :thermals, :default => "yes"
-    attribute :first, :default => "no"
+    attribute :stop, :default => "yes", :type => LibEagle::Types.Bool
+    attribute :thermals, :default => "yes", :type => LibEagle::Types.Bool
+    attribute :first, :default => "no", :type => LibEagle::Types.Bool
   end
 
   class Smd < LibEagle::Base
@@ -278,9 +277,9 @@ module LibEagle
     attribute :layer, :required => true
     attribute :roundness, :default => "0"
     attribute :rot, :default => "R0"
-    attribute :stop, :default => "yes"
-    attribute :thermals, :default => "yes"
-    attribute :cream, :default => "yes"
+    attribute :stop, :default => "yes", :type => LibEagle::Types.Bool
+    attribute :thermals, :default => "yes", :type => LibEagle::Types.Bool
+    attribute :cream, :default => "yes", :type => LibEagle::Types.Bool
   end
 
   class Element < LibEagle::Base
@@ -292,8 +291,8 @@ module LibEagle
     attribute :value, :required => true
     attribute :x, :required => true
     attribute :y, :required => true
-    attribute :locked, :default => "no"
-    attribute :smashed, :default => "no"
+    attribute :locked, :default => "no", :type => LibEagle::Types.Bool
+    attribute :smashed, :default => "no", :type => LibEagle::Types.Bool
     attribute :rot, :default => "R0"
   end
 
@@ -304,8 +303,8 @@ module LibEagle
     attribute :extent, :required => true
     attribute :drill, :required => true
     attribute :diameter, :default => "0"
-    attribute :shape, :default => "round"
-    attribute :alwaysstop, :default => "no"
+    attribute :shape, :default => "round", :type => LibEagle::Types.ViaShape
+    attribute :alwaysstop, :default => "no", :type => LibEagle::Types.Bool
   end
 
   class Polygon < LibEagle::Base
@@ -313,10 +312,10 @@ module LibEagle
     attribute :width, :required => true
     attribute :layer, :required => true
     attribute :spacing
-    attribute :pour, :default => "solid"
+    attribute :pour, :default => "solid", :type => LibEagle::Types.PolygonPour
     attribute :isolate
-    attribute :orphans, :default => "no"
-    attribute :thermals, :default => "yes"
+    attribute :orphans, :default => "no", :type => LibEagle::Types.Bool
+    attribute :thermals, :default => "yes", :type => LibEagle::Types.Bool
     attribute :rank, :default => "0"
   end
 
@@ -332,10 +331,10 @@ module LibEagle
     attribute :name, :required => true
     attribute :x, :required => true
     attribute :y, :required => true
-    attribute :visible, :default => "both"
-    attribute :length, :default => "long"
-    attribute :direction, :default => "io"
-    attribute :function, :default => "none"
+    attribute :visible, :default => "both", :type => LibEagle::Types.PinVisible
+    attribute :length, :default => "long", :type => LibEagle::Types.PinLength
+    attribute :direction, :default => "io", :type => LibEagle::Types.PinDirection
+    attribute :function, :default => "none", :type => LibEagle::Types.PinFunction
     attribute :swaplevel, :default => "0"
     attribute :rot, :default => "R0"
   end
@@ -359,7 +358,7 @@ module LibEagle
     attribute :gate, :required => true
     attribute :x, :required => true
     attribute :y, :required => true
-    attribute :smashed, :default => "no"
+    attribute :smashed, :default => "no", :type => LibEagle::Types.Bool
     attribute :rot, :default => "R0"
   end
 
@@ -369,10 +368,10 @@ module LibEagle
     attribute :y, :required => true
     attribute :size, :required => true
     attribute :layer, :required => true
-    attribute :font, :default => "proportional"
+    attribute :font, :default => "proportional", :type => LibEagle::Types.TextFont
     attribute :ratio, :default => "8"
     attribute :rot, :default => "R0"
-    attribute :xref, :default => "no"
+    attribute :xref, :default => "no", :type => LibEagle::Types.Bool
   end
 
   class Junction < LibEagle::Base
@@ -386,7 +385,7 @@ module LibEagle
     attribute :gate, :required => true
     attribute :pin, :required => true
     attribute :pad, :required => true
-    attribute :route, :default => "all"
+    attribute :route, :default => "all", :type => LibEagle::Types.ContactRoute
   end
 
   class Technology < LibEagle::Base
@@ -402,11 +401,11 @@ module LibEagle
     attribute :y
     attribute :size
     attribute :layer
-    attribute :font
+    attribute :font, :type => LibEagle::Types.TextFont
     attribute :ratio
     attribute :rot, :default => "R0"
-    attribute :display, :default => "value"
-    attribute :constant, :default => "no"
+    attribute :display, :default => "value", :type => LibEagle::Types.AttributeDisplay
+    attribute :constant, :default => "no", :type => LibEagle::Types.Bool
   end
 
   class Pinref < LibEagle::Base
@@ -420,7 +419,7 @@ module LibEagle
     empty_element
     attribute :element, :required => true
     attribute :pad, :required => true
-    attribute :route, :default => "all"
+    attribute :route, :default => "all", :type => LibEagle::Types.ContactRoute
     attribute :routetag, :default => ""
   end
 
@@ -448,7 +447,7 @@ module LibEagle
   end
 
   class Symbols < LibEagle::Base
-    object :symbol, :class => "SSymbol"
+    object :symbol
   end
 
   class Devicesets < LibEagle::Base
@@ -514,7 +513,7 @@ module LibEagle
   end
 
   class Signals < LibEagle::Base
-    object :signal, :class => "SSignal"
+    object :signal
   end
 
   class Busses < LibEagle::Base
@@ -530,8 +529,8 @@ module LibEagle
   #
   class Setting < LibEagle::Base
     empty_element
-    attribute :alwaysvectorfont
-    attribute :verticaltext
+    attribute :alwaysvectorfont, :type => LibEagle::Types.Bool
+    attribute :verticaltext, :type => LibEagle::Types.VerticalText
   end
 
   class Designrules < LibEagle::Base
@@ -543,14 +542,14 @@ module LibEagle
   class Grid < LibEagle::Base
     empty_element
     attribute :distance
-    attribute :unitdist
-    attribute :unit
-    attribute :style, :default => "lines"
+    attribute :unitdist, :type => LibEagle::Types.GridUnit
+    attribute :unit, :type => LibEagle::Types.GridUnit
+    attribute :style, :default => "lines", :type => LibEagle::Types.GridStyle
     attribute :multiple, :default => "0"
-    attribute :display, :default => "no"
+    attribute :display, :default => "no", :type => LibEagle::Types.Bool
     attribute :altdistance
-    attribute :altunitdist
-    attribute :altunit
+    attribute :altunitdist, :type => LibEagle::Types.GridUnit
+    attribute :altunit, :type => LibEagle::Types.GridUnit
   end
 
   class Layer < LibEagle::Base

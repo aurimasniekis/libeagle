@@ -11,8 +11,6 @@ module LibEagle
       end
     end
 
-    
-
     def self.iname(name)
       name.gsub(/^class$/, "clazz")
     end
@@ -62,6 +60,7 @@ module LibEagle
       # Initialize place inside LibEagle objects
       lib_eagle_objects[:attributes][attribute_name] ||= {}
       lib_eagle_objects[:attributes][attribute_name][:required] = true if params && params[:required]
+      lib_eagle_objects[:attributes][attribute_name][:type] = params[:type] if params && params[:type]
       lib_eagle_objects[:attributes][attribute_name][:valid_values] = params[:valid_values] if params && params[:valid_values]
 
       # If default value is set return default value
@@ -135,11 +134,19 @@ module LibEagle
       return @base_class
     end
 
-    def is_valid?
+    def valid?
       self.class.lib_eagle_objects[:attributes].each_pair do |attribute, params|
+        value = self.instance_variable_get("@attribute_#{attribute}")
         if params[:required]
-          unless self.instance_variable_get("@attribute_#{attribute}")
+          unless value
             raise AttributeRequired.new("#{self.class.name}: #{attribute} is required")
+            return false
+          end
+        end
+
+        if params[:type] && value
+          unless params[:type] =~ value
+            raise AttributeValueInvalid.new("`#{attribute}` value: \"#{value}\" isn't in valid range (#{params[:type]})")
             return false
           end
         end
@@ -148,7 +155,7 @@ module LibEagle
     end
 
     def saveXML
-      if is_valid?
+      if valid?
         LibEagle::XML.new(self.class.lib_eagle_objects,self).parse
       end
     end
