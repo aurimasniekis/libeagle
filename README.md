@@ -1,6 +1,6 @@
 # Libeagle
 
-TODO: Write a gem description
+LibEagle is a library which works with Cadsoft USA Eagle design files (schematics,boards,libraries). It can read and parse Eagle files to ruby objects and back or you can create files with code.
 
 ## Installation
 
@@ -18,7 +18,12 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Curently no general use is available. But you can test and see how it works
+
+
+## TODO:
+1. Finish Up Main Module
+2. Create Eagle file format object documentation
 
 ## Contributing
 
