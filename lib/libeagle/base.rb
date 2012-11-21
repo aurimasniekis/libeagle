@@ -135,28 +135,6 @@ module LibEagle
       return @base_class
     end
 
-    # self.class.eagle_attributes.each_pair do |attribute, params|
-    #     if params[:required]
-    #       unless send "#{attribute}"
-    #         raise AttributeRequired.new("#{self.class.name}: #{attribute} is required")
-    #         return false
-    #       end
-    #     end
-
-    #     if params[:valid_values]
-    #       value = send "#{attribute}"
-    #       is_valid = params[:valid_values].detect do |valid_value|
-    #         Regexp.new("^#{valid_value}$") =~ value
-    #       end
-    #       unless is_valid
-    #          raise AttributeValueInvalid.new("`#{attribute}` value: \"#{value}\" isn't in valid range (#{params[:valid_values]})")
-    #          return false
-    #       end
-    #     end
-    #     return true
-    #   end
-    # end
-
     def is_valid?
       self.class.lib_eagle_objects[:attributes].each_pair do |attribute, params|
         if params[:required]
