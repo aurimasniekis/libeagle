@@ -10,8 +10,8 @@ raise "LibEagle requires Ruby >= 1.8.6" if RUBY_VERSION < "1.8.6"
 
 module LibEagle
   class Parser
-    def self.parse(file)
-      xml = Nokogiri::XML(IO.read(file))
+    def self.parseXML(xml_content)
+      xml = Nokogiri::XML(xml_content)
       root = xml.xpath('//eagle').first
       eagle = Eagle.newXML(root)
       return eagle
@@ -20,5 +20,5 @@ module LibEagle
   
 end
 
-xml = LibEagle::Parser.parse('./schematic.sch')
+xml = LibEagle::Parser.parseXML(IO.read('./schematic.sch'))
 puts xml.saveXML
