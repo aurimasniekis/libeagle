@@ -15,4 +15,5 @@ Gem::Specification.new do |gem|
   gem.version       = Libeagle::VERSION
   gem.add_dependency('nokogiri')
   gem.add_dependency('htmlentities')
+  gem.licenses = ['MIT', 'GPL-2']
 end
