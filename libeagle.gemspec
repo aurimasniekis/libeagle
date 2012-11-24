@@ -13,4 +13,6 @@ Gem::Specification.new do |gem|
   gem.name          = "libeagle"
   gem.require_paths = ["lib"]
   gem.version       = Libeagle::VERSION
+  gem.add_dependency('nokogiri')
+  gem.add_dependency('htmlentities')
 end
