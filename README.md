@@ -83,4 +83,5 @@ After creating, parsing, editing if you want to save file use `.saveXML` will ge
 Copyright (c) 2012 Aurimas Niekis Dual licensed under the MIT license and GPL license.
 
 ## Links:
+* [rDoc](http://rdoc.info/github/gcds/libeagle/master/frames)
 * [Cadsoft Eagle PCB Design Software](http://www.cadsoftusa.com/eagle-pcb-design-software/product-overview/?language=en)
